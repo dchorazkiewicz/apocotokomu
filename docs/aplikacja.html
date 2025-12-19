@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wizualizacja Frameworku Oceny Modeli</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .card { background: white; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        input[type=range] { accent-color: #2563eb; }
+        .tab-active { border-bottom: 2px solid #2563eb; color: #2563eb; font-weight: 600; }
+        .tab-inactive { border-bottom: 2px solid transparent; color: #6b7280; }
+        .tab-inactive:hover { color: #374151; border-color: #d1d5db; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useMemo } = React;
+
+        // --- 1. GENERATORY DANYCH (MOCK DATA) ---
+        const TARGET_VALUE = 100;
+        const DAYS = 31;
+
+        const generateSeries = () => {
+            const days = Array.from({length: DAYS}, (_, i) => i + 1);
+            
+            // Model A: Liniowa zbieżność
+            const linear = days.map(t => 80 + (20 * (t / DAYS))); 
+            
+            // Model B: Gasnąca Sinusoida
+            const sineDecay = days.map(t => TARGET_VALUE + (30 * Math.exp(-0.1 * t) * Math.sin(0.5 * t)));
+            
+            // Model C: Nerwowy
+            const nervous = days.map(t => TARGET_VALUE + (Math.random() * 10 - 5) * (1 + 10/t));
+
+            // Model D: Late Spike
+            const lateSpike = days.map(t => {
+                if (t >= 27 && t <= 29) return TARGET_VALUE - 15;
+                return TARGET_VALUE + (Math.random() * 2 - 1);
+            });
+
+            // Model E: Early Spike
+            const earlySpike = days.map(t => {
+                if (t <= 5) return TARGET_VALUE - 20;
+                return TARGET_VALUE + (Math.random() * 1 - 0.5);
+            });
+
+            return [
+                { 
+                    id: 'linear', 
+                    name: 'Model A', 
+                    fullName: 'Model A: Liniowa Zbieżność',
+                    desc: 'Stabilny, liniowy wzrost predykcji. Powolny, ale bardzo przewidywalny i gładki.',
+                    data: linear, 
+                    color: 'rgb(59, 130, 246)' 
+                },
+                { 
+                    id: 'sine', 
+                    name: 'Model B', 
+                    fullName: 'Model B: Gasnąca Sinusoida',
+                    desc: 'Silne wahania na początku, ale idealna zbieżność na końcu miesiąca. Dobry, jeśli cenimy finisz.',
+                    data: sineDecay, 
+                    color: 'rgb(16, 185, 129)' 
+                },
+                { 
+                    id: 'nervous', 
+                    name: 'Model C', 
+                    fullName: 'Model C: Nerwowy (Szum)',
+                    desc: 'Szybko blisko celu, ale bardzo niestabilny (skacze góra-dół). Trudny w planowaniu logistycznym.',
+                    data: nervous, 
+                    color: 'rgb(249, 115, 22)' 
+                },
+                { 
+                    id: 'latespike', 
+                    name: 'Model D', 
+                    fullName: 'Model D: Late Spike',
+                    desc: 'Wydaje się idealny, ale ma krytyczną wpadkę (odchylenie) tuż przed zamknięciem miesiąca.',
+                    data: lateSpike, 
+                    color: 'rgb(239, 68, 68)' 
+                },
+                { 
+                    id: 'earlyspike', 
+                    name: 'Model E', 
+                    fullName: 'Model E: Early Spike',
+                    desc: 'Duży błąd na samym starcie, potem szybka korekta i stabilność. Powinien być "wybaczony" przez system.',
+                    data: earlySpike, 
+                    color: 'rgb(139, 92, 246)' 
+                },
+            ];
+        };
+
+        // --- 2. LOGIKA MATEMATYCZNA (ZGODNA Z DOKUMENTEM) ---
+        
+        const weightFunctions = {
+            flat: (t, maxT) => 1,
+            linear: (t, maxT) => t / maxT,
+            quadratic: (t, maxT) => Math.pow(t / maxT, 2),
+            exponential: (t, maxT) => Math.exp((t - maxT) / 5)
+        };
+
+        // Słownik nazw do wyświetlania
+        const weightFunctionNames = {
+            flat: 'Płaska',
+            linear: 'Liniowa',
+            quadratic: 'Kwadratowa',
+            exponential: 'Wykładnicza'
+        };
+
+        const calculateScore = (predictionVector, config) => {
+            const N = predictionVector.length;
+            let totalScore = 0;
+            let breakdown = { accuracy: 0, stability: 0 };
+
+            // 1. Accuracy
+            for (let i = 0; i < N; i++) {
+                const t = i + 1;
+                const error = Math.abs(predictionVector[i] - TARGET_VALUE);
+                const timeWeight = weightFunctions[config.weightType](t, N);
+                const finalWeight = timeWeight * config.accuracyWeight;
+                const scorePart = error * finalWeight;
+                totalScore += scorePart;
+                breakdown.accuracy += scorePart;
+            }
+
+            // 2. Stability
+            for (let k = 1; k <= config.maxShift; k++) {
+                let shiftScore = 0;
+                for (let i = k; i < N; i++) {
+                    const t = i + 1;
+                    const delta = Math.abs(predictionVector[i] - predictionVector[i - k]);
+                    const timeWeight = weightFunctions[config.weightType](t, N);
+                    const finalWeight = timeWeight * config.stabilityWeight;
+                    shiftScore += delta * finalWeight;
+                }
+                totalScore += shiftScore;
+                breakdown.stability += shiftScore;
+            }
+
+            return { score: totalScore, breakdown };
+        };
+
+        // --- 3. KOMPONENTY APLIKACJI ---
+
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('viz'); // 'viz' | 'matrix'
+            
+            const [config, setConfig] = useState({
+                weightType: 'quadratic',
+                maxShift: 1,
+                accuracyWeight: 1.0,
+                stabilityWeight: 2.0
+            });
+
+            const [models, setModels] = useState([]);
+            const [rankedModels, setRankedModels] = useState([]);
+            const [matrixData, setMatrixData] = useState({});
+
+            const chartRef = useRef(null);
+            const weightChartRef = useRef(null);
+
+            // Inicjalizacja danych
+            useEffect(() => {
+                setModels(generateSeries());
+            }, []);
+
+            // 1. Przeliczanie Rankingu Głównego (Tab 1)
+            useEffect(() => {
+                if (models.length === 0) return;
+                const computed = models.map(m => {
+                    const result = calculateScore(m.data, config);
+                    return { ...m, ...result };
+                });
+                computed.sort((a, b) => a.score - b.score);
+                setRankedModels(computed);
+            }, [models, config]);
+
+            // 2. Przeliczanie Macierzy Porównawczej (Tab 2)
+            useEffect(() => {
+                if (models.length === 0) return;
+                
+                const types = ['flat', 'linear', 'quadratic', 'exponential'];
+                const data = {};
+
+                // Dla każdego typu wagi liczymy rankingi
+                types.forEach(type => {
+                    const tempConfig = { ...config, weightType: type };
+                    // Liczymy wyniki dla wszystkich modeli przy TYM typie wagi
+                    const computedForType = models.map(m => ({
+                        id: m.id,
+                        res: calculateScore(m.data, tempConfig)
+                    }));
+                    
+                    // Sortujemy, żeby ustalić ranking (1, 2, 3...)
+                    computedForType.sort((a, b) => a.res.score - b.res.score);
+                    
+                    // Mapujemy wyniki do łatwego dostępu: data[type][modelId] = { score, rank }
+                    const typeResults = {};
+                    computedForType.forEach((item, idx) => {
+                        typeResults[item.id] = {
+                            score: item.res.score,
+                            rank: idx + 1
+                        };
+                    });
+                    data[type] = typeResults;
+                });
+
+                setMatrixData(data);
+            }, [models, config.maxShift, config.accuracyWeight, config.stabilityWeight]);
+
+            // Wykres Główny (Tylko gdy aktywny jest tab 'viz')
+            useEffect(() => {
+                if (activeTab !== 'viz' || !rankedModels.length) return;
+                
+                const ctx = document.getElementById('mainChart').getContext('2d');
+                if (chartRef.current) chartRef.current.destroy();
+
+                const datasets = rankedModels.map(m => ({
+                    label: m.name,
+                    data: m.data,
+                    borderColor: m.color,
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    tension: 0.1
+                }));
+
+                datasets.push({
+                    label: 'Cel (100)',
+                    data: Array(31).fill(TARGET_VALUE),
+                    borderColor: 'black',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointRadius: 0,
+                    order: 999
+                });
+
+                chartRef.current = new Chart(ctx, {
+                    type: 'line',
+                    data: { labels: Array.from({length: 31}, (_, i) => i+1), datasets },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: { mode: 'index', intersect: false },
+                        scales: { y: { suggestedMin: 60, suggestedMax: 120 } },
+                        plugins: { legend: { position: 'top', labels: { boxWidth: 10, font: { size: 11 } } } }
+                    }
+                });
+            }, [rankedModels, activeTab]);
+
+            // Wykres Wag (Sidebar)
+            useEffect(() => {
+                const ctx = document.getElementById('weightChart').getContext('2d');
+                if (weightChartRef.current) weightChartRef.current.destroy();
+                const days = Array.from({length: 31}, (_, i) => i+1);
+                const weights = days.map(t => weightFunctions[config.weightType](t, 31));
+
+                weightChartRef.current = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: days,
+                        datasets: [{
+                            label: 'Waga',
+                            data: weights,
+                            borderColor: '#6366f1',
+                            backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, max: 1.1 }, x: { display: false } }
+                    }
+                });
+            }, [config.weightType]);
+
+            return (
+                <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    {/* LEWA KOLUMNA: KONFIGURATOR */}
+                    <div className="lg:col-span-1 space-y-6">
+                        <div className="card p-6 border-l-4 border-blue-500">
+                            <h2 className="text-xl font-bold mb-4 text-gray-800 border-b pb-2">Konfiguracja Metryki</h2>
+                            
+                            {/* Wybór Wagi (Aktywny tylko dla Wizualizacji) */}
+                            <div className={`mb-6 transition-opacity ${activeTab === 'matrix' ? 'opacity-50 pointer-events-none' : ''}`}>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    Funkcja Wagi Czasu g(t)
+                                    {activeTab === 'matrix' && <span className="ml-2 text-xs text-red-500">(Nadpisane przez Macierz)</span>}
+                                </label>
+                                <select 
+                                    className="w-full p-2 border rounded bg-gray-50 focus:ring-2 focus:ring-blue-500"
+                                    value={config.weightType}
+                                    onChange={(e) => setConfig({...config, weightType: e.target.value})}
+                                >
+                                    <option value="flat">Płaska (Stała)</option>
+                                    <option value="linear">Liniowa (Rosnąca)</option>
+                                    <option value="quadratic">Kwadratowa (Koniec ważny)</option>
+                                    <option value="exponential">Wykładnicza (Agresywna)</option>
+                                </select>
+                                <div className="h-24 mt-4">
+                                    <canvas id="weightChart"></canvas>
+                                </div>
+                            </div>
+
+                            <div className="mb-6 space-y-6">
+                                <div>
+                                    <div className="flex justify-between">
+                                        <label className="text-sm font-medium">Waga Dokładności</label>
+                                        <span className="text-sm font-mono font-bold bg-blue-100 px-2 rounded text-blue-800">{config.accuracyWeight.toFixed(1)}x</span>
+                                    </div>
+                                    <input 
+                                        type="range" min="0" max="5" step="0.5" 
+                                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer mt-2"
+                                        value={config.accuracyWeight}
+                                        onChange={(e) => setConfig({...config, accuracyWeight: parseFloat(e.target.value)})}
+                                    />
+                                    <p className="text-xs text-gray-500 mt-1 italic">
+                                        Jak bardzo "boli" nietrafienie w cel (sprzedaż rzeczywistą). Wyższa wartość = priorytet dla trafności.
+                                    </p>
+                                </div>
+                                <div>
+                                    <div className="flex justify-between">
+                                        <label className="text-sm font-medium">Waga Stabilności</label>
+                                        <span className="text-sm font-mono font-bold bg-orange-100 px-2 rounded text-orange-800">{config.stabilityWeight.toFixed(1)}x</span>
+                                    </div>
+                                    <input 
+                                        type="range" min="0" max="5" step="0.5" 
+                                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer mt-2"
+                                        value={config.stabilityWeight}
+                                        onChange={(e) => setConfig({...config, stabilityWeight: parseFloat(e.target.value)})}
+                                    />
+                                    <p className="text-xs text-gray-500 mt-1 italic">
+                                        Jak bardzo "boli" zmiana zdania przez model. Wyższa wartość = model nerwowy spadnie w rankingu.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="mb-2">
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Max Shift (S)</label>
+                                <div className="flex gap-2">
+                                    {[0, 1, 2, 3].map(s => (
+                                        <button 
+                                            key={s}
+                                            onClick={() => setConfig({...config, maxShift: s})}
+                                            className={`flex-1 py-2 rounded text-sm font-medium transition-colors ${
+                                                config.maxShift === s 
+                                                ? 'bg-blue-600 text-white shadow-md' 
+                                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                            }`}
+                                        >
+                                            {s === 0 ? '0' : `S=${s}`}
+                                        </button>
+                                    ))}
+                                </div>
+                                <p className="text-xs text-gray-500 mt-2 italic">
+                                    Ile dni wstecz model "pamięta". S=1 sprawdza tylko zmiany dzień-do-dnia. S=3 sprawdza zmiany w oknie 3 dni.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* PRAWA KOLUMNA: TABY i TREŚĆ */}
+                    <div className="lg:col-span-2 space-y-6">
+                        
+                        {/* TABY */}
+                        <div className="flex border-b border-gray-200">
+                            <button 
+                                className={`py-2 px-4 text-sm font-medium transition-colors ${activeTab === 'viz' ? 'tab-active' : 'tab-inactive'}`}
+                                onClick={() => setActiveTab('viz')}
+                            >
+                                1. Wizualizacja i Ranking
+                            </button>
+                            <button 
+                                className={`py-2 px-4 text-sm font-medium transition-colors ${activeTab === 'matrix' ? 'tab-active' : 'tab-inactive'}`}
+                                onClick={() => setActiveTab('matrix')}
+                            >
+                                2. Analiza Wrażliwości (Macierz)
+                            </button>
+                        </div>
+
+                        {/* WIDOK 1: WIZUALIZACJA */}
+                        {activeTab === 'viz' && (
+                            <div className="space-y-6 animate-fade-in">
+                                <div className="card p-6">
+                                    <h2 className="text-lg font-bold mb-4">Wizualizacja Przebiegu</h2>
+                                    <div className="h-96 w-full">
+                                        <canvas id="mainChart"></canvas>
+                                    </div>
+                                </div>
+
+                                <div className="card p-6">
+                                    <h2 className="text-lg font-bold mb-4 border-b pb-2">Charakterystyka Modeli (Legenda Biznesowa)</h2>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {models.map(m => (
+                                            <div key={m.id} className="flex gap-3 items-start p-2 rounded hover:bg-gray-50 transition">
+                                                <div className="w-4 h-4 rounded-full mt-1 flex-shrink-0" style={{backgroundColor: m.color}}></div>
+                                                <div>
+                                                    <h4 className="font-bold text-sm text-gray-900">{m.fullName}</h4>
+                                                    <p className="text-xs text-gray-600 mt-1 leading-relaxed">{m.desc}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="card p-6">
+                                    <h2 className="text-lg font-bold mb-4 flex justify-between items-center">
+                                        Ranking (Obecna Konfiguracja)
+                                    </h2>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-left border-collapse">
+                                            <thead>
+                                                <tr className="text-xs font-semibold text-gray-500 border-b bg-gray-50">
+                                                    <th className="p-3">#</th>
+                                                    <th className="p-3">Nazwa</th>
+                                                    <th className="p-3 text-right">Score</th>
+                                                    <th className="p-3 text-right text-gray-400">Dokładność</th>
+                                                    <th className="p-3 text-right text-gray-400">Stabilność</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="text-sm divide-y divide-gray-100">
+                                                {rankedModels.map((m, idx) => (
+                                                    <tr key={m.id} className="hover:bg-gray-50 transition-colors">
+                                                        <td className="p-3 font-bold text-gray-400">{idx + 1}</td>
+                                                        <td className="p-3 font-medium">{m.name}</td>
+                                                        <td className="p-3 text-right">
+                                                            <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full font-bold">
+                                                                {m.score.toFixed(1)}
+                                                            </span>
+                                                        </td>
+                                                        <td className="p-3 text-right font-mono text-gray-500">{m.breakdown.accuracy.toFixed(1)}</td>
+                                                        <td className="p-3 text-right font-mono text-gray-500">{m.breakdown.stability.toFixed(1)}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* WIDOK 2: MACIERZ PORÓWNAWCZA */}
+                        {activeTab === 'matrix' && (
+                            <div className="card p-6 animate-fade-in">
+                                <h2 className="text-lg font-bold mb-4 flex flex-col md:flex-row md:justify-between md:items-center">
+                                    <span>Macierz Wrażliwości Rankingu</span>
+                                    <span className="text-xs font-normal text-gray-500 mt-1 md:mt-0">
+                                        (Wyniki przy ustalonych wagach dokładności i stabilności)
+                                    </span>
+                                </h2>
+                                
+                                <p className="text-sm text-gray-600 mb-6 bg-yellow-50 p-3 rounded border border-yellow-200">
+                                    Ta tabela pokazuje, jak zmienia się wynik (Score) i pozycja (#Rank) danego modelu w zależności od przyjętej funkcji wagi czasu.
+                                    Najlepszy model w danej kategorii jest podświetlony na <strong className="text-green-700">zielono</strong>.
+                                </p>
+
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-left border-collapse border border-gray-200">
+                                        <thead>
+                                            <tr className="bg-gray-100 text-xs uppercase text-gray-600 font-bold text-center">
+                                                <th className="p-4 border border-gray-200 text-left bg-white">Model</th>
+                                                <th className="p-4 border border-gray-200">Płaska</th>
+                                                <th className="p-4 border border-gray-200">Liniowa</th>
+                                                <th className="p-4 border border-gray-200">Kwadratowa</th>
+                                                <th className="p-4 border border-gray-200">Wykładnicza</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="text-sm">
+                                            {models.map(m => (
+                                                <tr key={m.id} className="hover:bg-gray-50">
+                                                    <td className="p-3 border border-gray-200 font-bold text-gray-800">
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="w-3 h-3 rounded-full" style={{backgroundColor: m.color}}></span>
+                                                            {m.name}
+                                                        </div>
+                                                    </td>
+                                                    {['flat', 'linear', 'quadratic', 'exponential'].map(type => {
+                                                        const result = matrixData[type] && matrixData[type][m.id];
+                                                        const isBest = result?.rank === 1;
+                                                        
+                                                        return (
+                                                            <td key={type} className={`p-3 border border-gray-200 text-center ${isBest ? 'bg-green-50' : ''}`}>
+                                                                {result ? (
+                                                                    <div className="flex flex-col items-center">
+                                                                        <span className={`text-xs font-bold px-2 py-0.5 rounded mb-1 ${
+                                                                            isBest ? 'bg-green-200 text-green-800' : 'bg-gray-200 text-gray-600'
+                                                                        }`}>
+                                                                            #{result.rank}
+                                                                        </span>
+                                                                        <span className="font-mono text-gray-600">{result.score.toFixed(1)}</span>
+                                                                    </div>
+                                                                ) : '-'}
+                                                            </td>
+                                                        );
+                                                    })}
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
+
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
