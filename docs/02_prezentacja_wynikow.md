@@ -93,8 +93,9 @@ Służy do weryfikacji, czy zwycięstwo modelu w danej komórce jest trwałe.
 
 * **Konstrukcja:**
 
-    * **Wiersze (Złożone):** Konkatenacja Rynku i Miesiąca (np. `PL_Styczeń` ... `RO_Czerwiec`).
+    * **Wiersze (Złożone):** Konkatenacja Rynku i Miesiąca (np. `PL_Styczeń` ... `PL_Czerwiec`).
     * **Kolumny:** Grupy Produktowe (S01, S02).
+    * **Parametr**: Zmieniamy rynki (np. widok dla PL, potem dla RO).
 
 * **Wnioski Biznesowe:**
 

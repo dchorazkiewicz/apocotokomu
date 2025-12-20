@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arena Modeli - System Walidacji</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        
+        .tab-active {
+            background-color: #eff6ff;
+            color: #1d4ed8;
+            border-bottom: 2px solid #1d4ed8;
+        }
+        .tab-inactive {
+            color: #64748b;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-inactive:hover {
+            color: #334155;
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useMemo } = React;
+
+        // --- 1. CONFIG & UTILS ---
+
+        const MARKETS = ['PL', 'RO'];
+        const GROUPS = ['S01', 'S02'];
+        const MONTHS = ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec'];
+        const TARGET = 100; // Cel sprzedaży (Uproszczenie: stały cel dla demo)
+
+        const MODEL_DEFS = [
+            { id: 'biz', name: 'Model Biznesowy', color: '#64748b', type: 'Ref', desc: 'Konserwatywny, płaski, rzadko trafia idealnie, ale bardzo stabilny.' },
+            { id: 'ds1', name: 'DS1: Snajper', color: '#2563eb', type: 'DS', desc: 'Wysoka trafność końcowa, ale duża zmienność (nerwowość).' },
+            { id: 'ds2', name: 'DS2: Beton', color: '#059669', type: 'DS', desc: 'Bardzo gładki przebieg, ale z systematycznym błędem (bias).' },
+            { id: 'ds3', name: 'DS3: Late Adjuster', color: '#d97706', type: 'DS', desc: 'Myli się przez większość miesiąca, koryguje ostro na koniec.' },
+            { id: 'ds4', name: 'DS4: Chaos', color: '#dc2626', type: 'DS', desc: 'Niespójny. Raz wygrywa, raz przegrywa (Lucky Shot).' }
+        ];
+
+        // --- 2. DATA GENERATOR (THE ACTORS) ---
+        // Generujemy spójny zestaw danych na 6 miesięcy dla każdej kombinacji Rynek/Grupa
+
+        const generateDataset = () => {
+            const data = {};
+            
+            MARKETS.forEach(mkt => {
+                data[mkt] = {};
+                GROUPS.forEach(grp => {
+                    data[mkt][grp] = {};
+                    MONTHS.forEach((mon, monIdx) => {
+                        const daysInMonth = 30;
+                        const modelsData = {};
+
+                        MODEL_DEFS.forEach(model => {
+                            let series = [];
+                            for(let t=1; t<=daysInMonth; t++) {
+                                let val = TARGET;
+                                const progress = t / daysInMonth; // 0 to 1
+
+                                // Specyfika rynków (PL trudniejszy, RO łatwiejszy)
+                                const marketNoise = mkt === 'PL' ? 1.2 : 0.8; 
+                                
+                                switch(model.id) {
+                                    case 'biz': // Płaski, niedoszacowany
+                                        val = TARGET * 0.9 + (Math.random() * 2 - 1);
+                                        break;
+                                    case 'ds1': // Snajper (nerwowy, ale trafia)
+                                        // Zbiega do celu, ale skacze
+                                        val = TARGET + (20 * (1-progress) * (Math.random() - 0.5) * 5 * marketNoise); 
+                                        // Wymuszamy trafienie blisko 100 na koniec
+                                        if(t > 28) val = TARGET + (Math.random() * 2 - 1);
+                                        break;
+                                    case 'ds2': // Beton (Gładki, ale obok)
+                                        // Sinusoida wolna, brak szumu
+                                        val = TARGET + 15 * Math.sin(t/10); 
+                                        break;
+                                    case 'ds3': // Late Adjuster
+                                        // Duży błąd do 25 dnia, potem skok
+                                        if (t < 25) val = TARGET - 15 + (Math.random());
+                                        else val = TARGET + (Math.random() * 2 - 1); // Nagła korekta
+                                        break;
+                                    case 'ds4': // Chaos
+                                        // Losowo dobry lub zły w zależności od miesiąca
+                                        const isLuckyMonth = (monIdx + (grp==='S01'?0:1)) % 2 === 0;
+                                        if (isLuckyMonth) val = TARGET + (Math.random() * 5 - 2.5); // Dobry miesiąc
+                                        else val = TARGET + 20 + (Math.random() * 10); // Zły miesiąc
+                                        break;
+                                }
+                                series.push(val);
+                            }
+                            modelsData[model.id] = series;
+                        });
+                        data[mkt][grp][mon] = modelsData;
+                    });
+                });
+            });
+            return data;
+        };
+
+        const DATASET = generateDataset();
+
+        // --- 3. MATH ENGINE ---
+
+        const weightFunctions = {
+            flat: (t, N) => 1,
+            linear: (t, N) => t / N,
+            exponential: (t, N) => Math.exp((t - N) / 5) // Kara rośnie wykładniczo blisko końca
+        };
+
+        const calculateScore = (series, config) => {
+            const N = series.length;
+            let accuracySum = 0;
+            let stabilitySum = 0;
+
+            // 1. Accuracy (Dokładność)
+            for (let i = 0; i < N; i++) {
+                const t = i + 1;
+                const error = Math.abs(series[i] - TARGET);
+                const w = weightFunctions[config.weightType](t, N);
+                accuracySum += error * w;
+            }
+
+            // 2. Stability (Stabilność - Shift)
+            for (let k = 1; k <= config.maxShift; k++) {
+                for (let i = k; i < N; i++) {
+                    const t = i + 1;
+                    const delta = Math.abs(series[i] - series[i-k]);
+                    const w = weightFunctions[config.weightType](t, N);
+                    stabilitySum += delta * w;
+                }
+            }
+
+            const accuracyComponent = config.alpha * accuracySum;
+            const stabilityComponent = config.beta * stabilitySum;
+
+            return {
+                totalScore: accuracyComponent + stabilityComponent,
+                breakdown: {
+                    accRaw: accuracySum,
+                    stabRaw: stabilitySum,
+                    accWeighted: accuracyComponent,
+                    stabWeighted: stabilityComponent
+                }
+            };
+        };
+
+        // --- 4. COMPONENTS ---
+
+        // Mały komponent do paska postępu wyniku (View C)
+        const ScoreBar = ({ acc, stab, max }) => {
+            const accPct = (acc / max) * 100;
+            const stabPct = (stab / max) * 100;
+            return (
+                <div className="w-full h-4 bg-gray-100 rounded-full overflow-hidden flex">
+                    <div style={{width: `${accPct}%`}} className="bg-blue-500 h-full" title="Koszt Dokładności"></div>
+                    <div style={{width: `${stabPct}%`}} className="bg-orange-500 h-full" title="Koszt Stabilności"></div>
+                </div>
+            )
+        };
+
+        const App = () => {
+            // State: Konfiguracja
+            const [config, setConfig] = useState({
+                alpha: 1.0,
+                beta: 2.0,
+                weightType: 'exponential',
+                maxShift: 1
+            });
+
+            // State: Nawigacja
+            const [view, setView] = useState('A'); // A, B, C, D, E, F
+            const [context, setContext] = useState({
+                market: 'PL',
+                group: 'S01',
+                month: 'Marzec'
+            });
+
+            // State: Obliczone Wyniki (Cache)
+            const [results, setResults] = useState(null);
+
+            // Przeliczanie wyników przy każdej zmianie konfigu
+            useEffect(() => {
+                const calculated = {};
+                // Iterujemy po całej strukturze danych
+                MARKETS.forEach(m => {
+                    calculated[m] = {};
+                    GROUPS.forEach(g => {
+                        calculated[m][g] = {};
+                        MONTHS.forEach(mon => {
+                            calculated[m][g][mon] = MODEL_DEFS.map(model => {
+                                const series = DATASET[m][g][mon][model.id];
+                                const score = calculateScore(series, config);
+                                return { model, score, series };
+                            }).sort((a, b) => a.score.totalScore - b.score.totalScore);
+                        });
+                    });
+                });
+                setResults(calculated);
+            }, [config]);
+
+            // Chart Refs
+            const mainChartRef = useRef(null);
+            
+            // Render wykresu głównego (dla widoków C i F)
+            useEffect(() => {
+                if (!results || (view !== 'C' && view !== 'F')) return;
+                
+                const ctx = document.getElementById('mainChart');
+                if(!ctx) return;
+                
+                if (mainChartRef.current) mainChartRef.current.destroy();
+
+                const currentData = results[context.market][context.group][context.month];
+                
+                // Bierzemy top 3 + Biznesowy
+                const modelsToShow = currentData.slice(0, 5); 
+
+                const datasets = modelsToShow.map(item => ({
+                    label: item.model.name,
+                    data: item.series,
+                    borderColor: item.model.color,
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    tension: 0.1
+                }));
+
+                // Dodajemy linię celu
+                datasets.push({
+                    label: 'Cel (Target)',
+                    data: Array(30).fill(TARGET),
+                    borderColor: 'black',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointRadius: 0
+                });
+
+                mainChartRef.current = new Chart(ctx, {
+                    type: 'line',
+                    data: { labels: Array.from({length:30}, (_,i)=>i+1), datasets },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: { mode: 'index', intersect: false },
+                        scales: { y: { suggestedMin: 80, suggestedMax: 120 } },
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+
+            }, [results, view, context]);
+
+
+            if (!results) return <div className="p-10">Ładowanie Areny...</div>;
+
+            // --- HELPERY DO WIDOKÓW ---
+
+            // Pobierz zwycięzcę dla danej komórki
+            const getWinner = (m, g, mon) => results[m][g][mon][0];
+
+            return (
+                <div className="min-h-screen flex flex-col lg:flex-row text-gray-800">
+                    
+                    {/* --- SIDEBAR: KONFIGURATOR --- */}
+                    <div className="w-full lg:w-80 bg-slate-900 text-white p-6 flex-shrink-0 flex flex-col shadow-2xl z-10">
+                        <h1 className="text-xl font-bold mb-1 tracking-wide text-blue-400">ARENA MODELI</h1>
+                        <p className="text-xs text-slate-400 mb-8 uppercase tracking-widest">Executive Dashboard v1.0</p>
+
+                        <div className="space-y-8 flex-1">
+                            {/* Parametry Globalne */}
+                            <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                                <h3 className="text-xs font-bold text-slate-300 uppercase mb-4 flex items-center gap-2">
+                                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                                    Priorytety Biznesowe
+                                </h3>
+                                
+                                <div className="mb-6">
+                                    <div className="flex justify-between mb-1">
+                                        <label className="text-sm font-medium text-blue-200">Alfa (Dokładność)</label>
+                                        <span className="text-xs bg-blue-900 px-2 py-0.5 rounded text-blue-200 font-mono">{config.alpha.toFixed(1)}</span>
+                                    </div>
+                                    <input type="range" min="0" max="5" step="0.5" 
+                                        className="w-full accent-blue-500 h-1 bg-slate-600 rounded cursor-pointer"
+                                        value={config.alpha} onChange={e=>setConfig({...config, alpha: parseFloat(e.target.value)})} 
+                                    />
+                                </div>
+
+                                <div>
+                                    <div className="flex justify-between mb-1">
+                                        <label className="text-sm font-medium text-orange-200">Beta (Stabilność)</label>
+                                        <span className="text-xs bg-orange-900 px-2 py-0.5 rounded text-orange-200 font-mono">{config.beta.toFixed(1)}</span>
+                                    </div>
+                                    <input type="range" min="0" max="10" step="0.5" 
+                                        className="w-full accent-orange-500 h-1 bg-slate-600 rounded cursor-pointer"
+                                        value={config.beta} onChange={e=>setConfig({...config, beta: parseFloat(e.target.value)})} 
+                                    />
+                                    <p className="text-[10px] text-slate-400 mt-2 leading-tight">
+                                        Wyższa Beta mocniej karze modele "nerwowe", nawet jeśli są trafne.
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Parametry Techniczne */}
+                            <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                                <h3 className="text-xs font-bold text-slate-300 uppercase mb-4 flex items-center gap-2">
+                                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                                    Matematyka
+                                </h3>
+                                
+                                <div className="mb-4">
+                                    <label className="block text-xs text-slate-400 mb-1">Funkcja Wagi Czasu</label>
+                                    <select 
+                                        className="w-full bg-slate-900 border border-slate-600 rounded p-2 text-sm focus:border-blue-500 outline-none"
+                                        value={config.weightType} onChange={e=>setConfig({...config, weightType: e.target.value})}
+                                    >
+                                        <option value="flat">Płaska (Flat)</option>
+                                        <option value="linear">Liniowa (Linear)</option>
+                                        <option value="exponential">Wykładnicza (Exp)</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs text-slate-400 mb-1">Max Shift (Horyzont Pamięci)</label>
+                                    <div className="flex gap-1 bg-slate-900 p-1 rounded border border-slate-600">
+                                        {[1, 2, 3].map(s => (
+                                            <button key={s} 
+                                                onClick={()=>setConfig({...config, maxShift: s})}
+                                                className={`flex-1 py-1 rounded text-xs transition ${config.maxShift===s ? 'bg-purple-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                                            >
+                                                {s}d
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* --- MAIN CONTENT --- */}
+                    <div className="flex-1 flex flex-col h-screen overflow-hidden bg-slate-50">
+                        
+                        {/* Header & Nav */}
+                        <header className="bg-white border-b px-6 py-4 flex items-center justify-between shadow-sm z-10">
+                            
+                            {/* Kontekst Selector (dla widoków C, D, E, F) */}
+                            <div className="flex items-center gap-4">
+                                <div className="flex flex-col">
+                                    <span className="text-[10px] uppercase text-gray-400 font-bold tracking-wider">Rynek</span>
+                                    <select className="font-bold text-gray-700 bg-transparent outline-none cursor-pointer hover:text-blue-600"
+                                        value={context.market} onChange={e=>setContext({...context, market: e.target.value})}
+                                    >
+                                        {MARKETS.map(m => <option key={m} value={m}>{m}</option>)}
+                                    </select>
+                                </div>
+                                <div className="h-8 w-px bg-gray-200"></div>
+                                <div className="flex flex-col">
+                                    <span className="text-[10px] uppercase text-gray-400 font-bold tracking-wider">Grupa</span>
+                                    <select className="font-bold text-gray-700 bg-transparent outline-none cursor-pointer hover:text-blue-600"
+                                        value={context.group} onChange={e=>setContext({...context, group: e.target.value})}
+                                    >
+                                        {GROUPS.map(g => <option key={g} value={g}>{g}</option>)}
+                                    </select>
+                                </div>
+                                <div className="h-8 w-px bg-gray-200"></div>
+                                <div className="flex flex-col">
+                                    <span className="text-[10px] uppercase text-gray-400 font-bold tracking-wider">Miesiąc</span>
+                                    <select className="font-bold text-gray-700 bg-transparent outline-none cursor-pointer hover:text-blue-600"
+                                        value={context.month} onChange={e=>setContext({...context, month: e.target.value})}
+                                    >
+                                        {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* Tabs */}
+                            <nav className="flex gap-1 bg-gray-100 p-1 rounded-lg">
+                                {[
+                                    {id: 'A', label: 'A. Heatmapa'},
+                                    {id: 'B', label: 'B. Spójność'},
+                                    {id: 'C', label: 'C. Detale'},
+                                    {id: 'D', label: 'D. Ewolucja'},
+                                    {id: 'E', label: 'E. Koszt'},
+                                    {id: 'F', label: 'F. What-If'}
+                                ].map(tab => (
+                                    <button 
+                                        key={tab.id}
+                                        onClick={() => setView(tab.id)}
+                                        className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                                            view === tab.id 
+                                            ? 'bg-white text-blue-700 shadow-sm' 
+                                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200'
+                                        }`}
+                                    >
+                                        {tab.label}
+                                    </button>
+                                ))}
+                            </nav>
+                        </header>
+
+                        {/* Content Area */}
+                        <main className="flex-1 overflow-auto p-6 relative">
+                            
+                            {/* VIEW A: HEATMAPA RYNKOWA */}
+                            {view === 'A' && (
+                                <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
+                                    <div className="flex justify-between items-end">
+                                        <div>
+                                            <h2 className="text-2xl font-bold text-gray-800">Strategiczna Mapa Ciepła</h2>
+                                            <p className="text-gray-500">Zwycięskie modele dla wybranego miesiąca: <strong className="text-blue-600">{context.month}</strong></p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {MARKETS.map(mkt => (
+                                            <div key={mkt} className="bg-white rounded-xl shadow-sm border p-6">
+                                                <h3 className="text-lg font-bold text-gray-400 border-b pb-2 mb-4">Rynek {mkt}</h3>
+                                                <div className="space-y-4">
+                                                    {GROUPS.map(grp => {
+                                                        const winner = getWinner(mkt, grp, context.month);
+                                                        return (
+                                                            <div key={grp} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100 hover:border-blue-300 transition-colors">
+                                                                <div>
+                                                                    <span className="text-xs font-bold text-gray-400 block mb-1">Grupa {grp}</span>
+                                                                    <div className="flex items-center gap-2">
+                                                                        <div className="w-3 h-3 rounded-full" style={{background: winner.model.color}}></div>
+                                                                        <span className="font-bold text-gray-800">{winner.model.name}</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="text-right">
+                                                                    <span className="block text-2xl font-bold text-blue-600">{winner.score.totalScore.toFixed(0)}</span>
+                                                                    <span className="text-[10px] text-gray-400 uppercase">Score</span>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    
+                                    <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 text-sm text-blue-800">
+                                        <strong>Wnioski biznesowe:</strong> Jeśli widzisz różne kolory (różnych zwycięzców) w powyższych kafelkach, oznacza to, że segmentacja działa – różne rynki/grupy wymagają różnych modeli.
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* VIEW B: TIME CONSISTENCY */}
+                            {view === 'B' && (
+                                <div className="max-w-5xl mx-auto space-y-6">
+                                     <div>
+                                        <h2 className="text-2xl font-bold text-gray-800">Analiza Konsystencji (Time Consistency)</h2>
+                                        <p className="text-gray-500">Czy zwycięzca jest przypadkowy, czy dominuje systematycznie? Analiza dla rynku: <strong>{context.market}</strong></p>
+                                    </div>
+
+                                    <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
+                                        <table className="w-full text-left border-collapse">
+                                            <thead>
+                                                <tr className="bg-gray-50 text-xs text-gray-500 uppercase font-bold border-b">
+                                                    <th className="p-4 w-1/4">Miesiąc</th>
+                                                    {GROUPS.map(g => <th key={g} className="p-4 w-1/3">Grupa {g}</th>)}
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-gray-100">
+                                                {MONTHS.map(mon => (
+                                                    <tr key={mon} className="hover:bg-gray-50">
+                                                        <td className="p-4 font-medium text-gray-700">{mon}</td>
+                                                        {GROUPS.map(grp => {
+                                                            const winner = getWinner(context.market, grp, mon);
+                                                            return (
+                                                                <td key={grp} className="p-4">
+                                                                    <div className="flex items-center gap-3">
+                                                                        <span className="w-2 h-8 rounded-full" style={{background: winner.model.color}}></span>
+                                                                        <div>
+                                                                            <div className="font-bold text-sm text-gray-900">{winner.model.name}</div>
+                                                                            <div className="text-xs text-gray-500">Score: {winner.score.totalScore.toFixed(1)}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            );
+                                                        })}
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* VIEW C: DEEP COMPARISON */}
+                            {view === 'C' && (
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                    <div className="lg:col-span-2 flex flex-col gap-6">
+                                        <div className="bg-white p-6 rounded-xl shadow-sm border h-[500px]">
+                                            <h3 className="font-bold text-gray-700 mb-4">Przebieg Predykcji vs Cel</h3>
+                                            <div className="relative h-full w-full">
+                                                <canvas id="mainChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border overflow-auto max-h-[800px]">
+                                        <h3 className="font-bold text-gray-700 mb-6">Dekompozycja Wyniku</h3>
+                                        <div className="space-y-6">
+                                            {results[context.market][context.group][context.month].map((res, idx) => {
+                                                const maxScore = results[context.market][context.group][context.month][4].score.totalScore;
+                                                return (
+                                                    <div key={res.model.id} className="relative">
+                                                        <div className="flex justify-between items-center mb-1">
+                                                            <div className="flex items-center gap-2">
+                                                                <span className="font-bold text-sm text-gray-800">#{idx+1} {res.model.name}</span>
+                                                                {idx===0 && <span className="bg-yellow-100 text-yellow-800 text-[10px] px-1.5 rounded font-bold">WINNER</span>}
+                                                            </div>
+                                                            <span className="font-mono font-bold text-lg">{res.score.totalScore.toFixed(0)}</span>
+                                                        </div>
+                                                        <ScoreBar 
+                                                            acc={res.score.breakdown.accWeighted} 
+                                                            stab={res.score.breakdown.stabWeighted} 
+                                                            max={maxScore * 1.1} 
+                                                        />
+                                                        <div className="flex justify-between text-[10px] text-gray-400 mt-1">
+                                                            <span className="text-blue-600 font-medium">Błąd: {res.score.breakdown.accWeighted.toFixed(0)}</span>
+                                                            <span className="text-orange-600 font-medium">Shift: {res.score.breakdown.stabWeighted.toFixed(0)}</span>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                        
+                                        <div className="mt-8 p-4 bg-gray-50 rounded-lg border text-xs text-gray-500">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <div className="w-3 h-3 bg-blue-500 rounded"></div> <span>Składowa Dokładności (Alpha)</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-3 h-3 bg-orange-500 rounded"></div> <span>Składowa Stabilności (Beta)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                             {/* VIEW D: EVOLUTION */}
+                             {view === 'D' && (
+                                <div className="max-w-5xl mx-auto">
+                                    <h2 className="text-2xl font-bold text-gray-800 mb-6">Ewolucja Wyników (6 Miesięcy)</h2>
+                                    
+                                    <div className="bg-white rounded-xl shadow-sm border p-6 overflow-x-auto">
+                                        <table className="w-full text-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th className="p-3 text-left">Model</th>
+                                                    {MONTHS.map(m => <th key={m} className="p-3 text-right">{m.slice(0,3)}</th>)}
+                                                    <th className="p-3 text-right bg-gray-50">Średnia</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y">
+                                                {MODEL_DEFS.map(model => {
+                                                    const scores = MONTHS.map(mon => {
+                                                        const item = results[context.market][context.group][mon].find(r => r.model.id === model.id);
+                                                        return item.score.totalScore;
+                                                    });
+                                                    const avg = scores.reduce((a,b)=>a+b,0) / scores.length;
+                                                    
+                                                    return (
+                                                        <tr key={model.id} className="hover:bg-gray-50">
+                                                            <td className="p-3 font-bold flex items-center gap-2">
+                                                                <div className="w-3 h-3 rounded-full" style={{background: model.color}}></div>
+                                                                {model.name}
+                                                            </td>
+                                                            {scores.map((s, i) => (
+                                                                <td key={i} className="p-3 text-right font-mono text-gray-600">
+                                                                    {s.toFixed(0)}
+                                                                </td>
+                                                            ))}
+                                                            <td className="p-3 text-right font-bold bg-gray-50 font-mono text-gray-900">{avg.toFixed(0)}</td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* VIEW E: COST OF STABILITY */}
+                            {view === 'E' && (
+                                <div className="max-w-5xl mx-auto animate-fade-in">
+                                    <div className="mb-6">
+                                        <h2 className="text-2xl font-bold text-gray-800">Analiza "Cost of Stability"</h2>
+                                        <p className="text-gray-600">
+                                            Porównanie rankingu "Czysta Trafność" ($\beta=0$) vs "Obecna Metryka" (Twoja Beta = {config.beta}).
+                                            <br/>Odpowiada na pytanie: <em>Ile tracimy na trafności, wybierając model stabilniejszy?</em>
+                                        </p>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-8">
+                                        {/* LEWA: Ranking Czysty */}
+                                        <div className="bg-white rounded-xl shadow-sm border p-6 relative overflow-hidden">
+                                            <div className="absolute top-0 left-0 w-full h-1 bg-blue-500"></div>
+                                            <h3 className="font-bold text-gray-800 mb-4 flex justify-between">
+                                                <span>Ranking: Czysta Dokładność</span>
+                                                <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-500">Beta = 0</span>
+                                            </h3>
+                                            
+                                            <div className="space-y-3">
+                                                {(() => {
+                                                    // Symulacja rankingu dla Beta=0
+                                                    const rawList = MODEL_DEFS.map(model => {
+                                                        const series = DATASET[context.market][context.group][context.month][model.id];
+                                                        // Liczymy score tylko z alpha=1, beta=0
+                                                        const tempScore = calculateScore(series, {...config, alpha: 1, beta: 0});
+                                                        return { model, score: tempScore.totalScore };
+                                                    }).sort((a,b) => a.score - b.score);
+
+                                                    return rawList.map((item, idx) => (
+                                                        <div key={item.model.id} className="flex items-center justify-between p-3 bg-gray-50 rounded border border-gray-100">
+                                                            <div className="flex items-center gap-3">
+                                                                <span className="text-gray-400 font-bold w-4">{idx+1}.</span>
+                                                                <span className="font-medium text-sm">{item.model.name}</span>
+                                                            </div>
+                                                            <span className="font-mono text-sm text-blue-600">{item.score.toFixed(0)}</span>
+                                                        </div>
+                                                    ));
+                                                })()}
+                                            </div>
+                                        </div>
+
+                                        {/* PRAWA: Ranking Rzeczywisty */}
+                                        <div className="bg-white rounded-xl shadow-sm border p-6 relative overflow-hidden">
+                                            <div className="absolute top-0 left-0 w-full h-1 bg-purple-500"></div>
+                                            <h3 className="font-bold text-gray-800 mb-4 flex justify-between">
+                                                <span>Ranking: Biznesowy (Skorygowany)</span>
+                                                <span className="text-xs bg-purple-100 px-2 py-1 rounded text-purple-700">Beta = {config.beta}</span>
+                                            </h3>
+                                            
+                                            <div className="space-y-3">
+                                                {results[context.market][context.group][context.month].map((item, idx) => (
+                                                    <div key={item.model.id} className={`flex items-center justify-between p-3 rounded border ${idx===0 ? 'bg-green-50 border-green-200' : 'bg-white border-gray-100'}`}>
+                                                        <div className="flex items-center gap-3">
+                                                            <span className={`font-bold w-4 ${idx===0 ? 'text-green-600' : 'text-gray-400'}`}>{idx+1}.</span>
+                                                            <span className={`font-medium text-sm ${idx===0 ? 'text-green-800' : ''}`}>{item.model.name}</span>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <span className="block font-mono text-sm font-bold text-gray-800">{item.score.totalScore.toFixed(0)}</span>
+                                                            <span className="text-[10px] text-gray-400">Shift penalty: {item.score.breakdown.stabWeighted.toFixed(0)}</span>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="mt-6 p-4 bg-orange-50 border border-orange-100 rounded-lg text-sm text-orange-800 flex gap-3">
+                                        <div className="text-2xl">💡</div>
+                                        <div>
+                                            <strong>Jak czytać ten widok?</strong>
+                                            <p className="mt-1">
+                                                Jeśli <strong>Model DS1 (Snajper)</strong> wygrywa po lewej, a spada nisko po prawej, to dowód, że jest dokładny, ale bardzo niestabilny.
+                                                Jeśli po prawej wygrywa <strong>Model Biznesowy</strong>, oznacza to, że przy obecnej wadze Bety, organizacja woli "święty spokój" niż precyzję.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                             {/* VIEW F: WHAT-IF SIMULATION */}
+                             {view === 'F' && (
+                                <div className="h-full grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                    <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border p-4 flex flex-col">
+                                        <h3 className="font-bold text-gray-700 mb-2">Podgląd Live (Interaktywny)</h3>
+                                        <div className="flex-1 relative w-full h-full min-h-[300px]">
+                                            <canvas id="mainChart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div className="lg:col-span-1 bg-slate-50 border rounded-xl p-4 overflow-auto">
+                                        <h3 className="font-bold text-gray-800 mb-4 border-b pb-2">Ranking "What-If"</h3>
+                                        <p className="text-xs text-gray-500 mb-4">Zmieniaj suwaki po lewej stronie i obserwuj, jak zmienia się lider.</p>
+                                        
+                                        <div className="space-y-2 transition-all">
+                                            {results[context.market][context.group][context.month].map((item, idx) => (
+                                                <div key={item.model.id} className={`flex items-center gap-3 p-3 rounded-lg border transition-all duration-300 ${idx===0 ? 'scale-105 bg-white shadow-md border-blue-300 z-10' : 'bg-gray-100 border-transparent opacity-80'}`}>
+                                                    <div className="font-bold text-xl text-gray-400 w-6">#{idx+1}</div>
+                                                    <div className="w-2 h-8 rounded-full" style={{background: item.model.color}}></div>
+                                                    <div className="flex-1">
+                                                        <div className="font-bold text-sm">{item.model.name}</div>
+                                                        <div className="flex justify-between text-xs text-gray-500 mt-1">
+                                                            <span>Score: {item.score.totalScore.toFixed(0)}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                        </main>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
