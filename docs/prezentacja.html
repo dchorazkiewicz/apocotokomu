@@ -68,7 +68,7 @@
         const MODEL_DEFS = [
             { id: 'biz', name: 'Model Biznesowy', color: '#64748b', type: 'Ref', desc: 'Liniowe dociąganie do celu. Przewidywalny, z małym szumem.' },
             { id: 'ds1', name: 'DS1: Gasnąca Sinusoida', color: '#2563eb', type: 'DS', desc: 'Oscyluje wokół celu, ale z każdym dniem coraz precyzyjniej (malejąca amplituda).' },
-            { id: 'ds2', name: 'DS2: Stabilny Bias', color: '#059669', type: 'DS', desc: 'Bardzo stabilny, gładki, ale systematycznie niedoszacowany (bezpieczny).' },
+            { id: 'ds2', name: 'DS2: Utrata Zbieżności', color: '#059669', type: 'DS', desc: 'Na początku miesiąca bardzo dokładny, ale w drugiej połowie traci kontakt z celem (rozjeżdża się).' },
             { id: 'ds3', name: 'DS3: Late Adjuster', color: '#d97706', type: 'DS', desc: 'Długo utrzymuje błędną prognozę, gwałtowna korekta na sam koniec.' },
             { id: 'ds4', name: 'DS4: Wysoka Zmienność', color: '#dc2626', type: 'DS', desc: 'Średnio trafia w punkt, ale jest bardzo nerwowy (duże skoki dzień-do-dnia).' }
         ];
@@ -118,10 +118,19 @@
                                         val = TARGET + osc;
                                         break;
 
-                                    case 'ds2': // Stabilny Bias (Beton)
-                                        // Płasko lub delikatna fala, ale przesunięta o -8
-                                        // Bardzo mały szum własny
-                                        val = (TARGET - 8) + (Math.sin(t * 0.1) * 2);
+                                    case 'ds2': // Utrata Zbieżności (Reverse Adjuster)
+                                        // Odwrotność Late Adjuster: Dobry start, słaby koniec
+                                        if (t <= 15) {
+                                            // Pierwsza połowa: trzyma się blisko celu (udaje idealny)
+                                            val = TARGET + (randomNoise * 2);
+                                        } else {
+                                            // Druga połowa: stopniowo odpływa od celu
+                                            // Kierunek odpływu zależy od grupy (żeby nie było nudno)
+                                            const direction = grp === 'S01' ? -1 : 1;
+                                            // Błąd rośnie liniowo z każdym dniem po 15.
+                                            const drift = (t - 15) * 1.5; 
+                                            val = TARGET + (direction * drift) + (randomNoise * 2);
+                                        }
                                         break;
 
                                     case 'ds3': // Late Adjuster (bez zmian - bo jest spoko)
