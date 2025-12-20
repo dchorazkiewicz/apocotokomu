@@ -14,11 +14,9 @@ System opiera się na wielowymiarowej definicji błędu ("Wektor Rozszerzony"), 
 
 * **Wielowymiarowość:** Ocena uwzględnia jednocześnie **Dokładność** (odchylenie od celu) oraz **Stabilność** (zmienność predykcji w czasie).
 * **Sterowanie Biznesowe:** Wynik końcowy zależy od konfiguracji parametrów globalnych:
-    *  (Waga Dokładności),
-    *  (Waga Stabilności),
+    * $\alpha$ (Waga Dokładności),
+    * $\beta$ (Waga Stabilności),
     * Funkcja Wagi Czasu (np. liniowa, wykładnicza).
-
-
 
 ### 2.2. Przestrzeń Modeli i Kontekst (Zasada Niezależności)
 
@@ -27,9 +25,9 @@ Przyjmujemy następującą strukturę (bazę myślową) dla projektowanych widok
 * **Instancja Modelu:** Model jest ściśle związany z kontekstem. Algorytm X wytrenowany dla Grupy S01 jest matematycznie i biznesowo innym bytem niż ten sam Algorytm X dla Grupy S02.
 * **Heterogeniczność Danych:** Zakładamy, że Grupy Produktowe (nawet w obrębie tego samego Rynku) mają fundamentalnie inną charakterystykę. Oczekujemy, że mogą wymagać zupełnie innych modeli do poprawnego opisu.
 * **Struktura Rynku:** Analiza obejmuje macierz **2x2**:
+
 * **Rynki:** PL (Polska), RO (Rumunia).
 * **Grupy Produktowe:** S01, S02.
-
 
 * **Typy Algorytmów:** Porównujemy 5 typów podejść (1 Model Biznesowy/Referencyjny + 4 Modele Data Science). Łącznie daje to 10 niezależnych instancji podlegających ocenie (dla przyjętej bazy myślowej).
 
@@ -48,7 +46,7 @@ Przyjmujemy następującą strukturę (bazę myślową) dla projektowanych widok
 
 Fundamentalnym założeniem systemu jest rozłączność definicji sukcesu.
 
-* **Wybór, nie porównanie:** Użytkownik najpierw konfiguruje metrykę (dobiera wagi  i ), definiując cel biznesowy. Dopiero po ustaleniu "zasad gry" przystępujemy do oceny zawodników na arenie.
+* **Wybór, nie porównanie:** Użytkownik najpierw konfiguruje metrykę (dobiera wagi $\alpha$ i $\beta$), definiując cel biznesowy. Dopiero po ustaleniu "zasad gry" przystępujemy do oceny zawodników na arenie.
 * **Zakaz krzyżowania metryk:** Nigdy nie porównujemy wartości Metryki A z wartością Metryki B. Porównujemy wyłącznie różne modele w świetle tej samej, ustalonej metryki.
 
 ### 3.2. Zasada Lokalnej Optymalizacji (Granularność Decyzji)
@@ -56,7 +54,7 @@ Fundamentalnym założeniem systemu jest rozłączność definicji sukcesu.
 System nie dąży do generalizacji.
 
 * **Brak przymusu spójności algorytmicznej:** Fakt, że na Rynku PL dla grupy S01 wygrywa "Model Biznesowy", w żaden sposób nie determinuje wyboru dla grupy S02. Tam może wygrać "Model DS4". Jest to sytuacja pożądana i oczekiwana.
-* **Cel:** Wybór najlepszej instancji dla konkretnej komórki macierzy (Rynek  Grupa) lub diagnoza, że dla danej komórki wszystkie dostępne modele wymagają poprawy (usprawnienia).
+* **Cel:** Wybór najlepszej instancji dla konkretnej komórki macierzy (Rynek x Grupa) lub diagnoza, że dla danej komórki wszystkie dostępne modele wymagają poprawy (usprawnienia).
 
 ### 3.3. Metody Agregacji
 
@@ -69,7 +67,7 @@ Aby ocenić jakość modelu w dłuższym horyzoncie, system umożliwia agregacj�
 
 ## 4. Scenariusze Wizualizacji (Widoki Decyzyjne)
 
-System oferuje cztery główne perspektywy (Views), wspierające proces decyzyjny na "Arenie Modeli".
+System oferuje główne perspektywy (Views), wspierające proces decyzyjny na "Arenie Modeli".
 
 ### Widok A: Strategiczna Mapa Ciepła (Heatmapa Rynkowa)
 
@@ -78,15 +76,14 @@ Służy do szybkiej identyfikacji "lokalnych mistrzów" w każdym segmencie.
 * **Pytanie:** *Jaki model najlepiej radzi sobie z konkretną specyfiką danej grupy produktowej na danym rynku?*
 
 * **Konstrukcja:**
+
     * **Wiersze:** Rynki (PL, RO).
     * **Kolumny:** Grupy Produktowe (S01, S02).
     * **Zawartość komórki:** Nazwa zwycięskiego modelu (model z najniższą wartością metryki) lub wartość metryki zakodowana kolorem.
 
-
 * **Wnioski Biznesowe:**
-    *  Mozaika kolorów (różni zwycięzcy w różnych komórkach) jest sygnałem pozytywnym – świadczy o dobrej specjalizacji modeli.
 
-
+    * Mozaika kolorów (różni zwycięzcy w różnych komórkach) jest sygnałem pozytywnym – świadczy o dobrej specjalizacji modeli.
 
 ### Widok B: Analiza Konsystencji w Czasie (Time Consistency)
 
@@ -95,48 +92,76 @@ Służy do weryfikacji, czy zwycięstwo modelu w danej komórce jest trwałe.
 * **Pytanie:** *Czy wybrany dla danej grupy model wygrywa systematycznie, czy jego skuteczność jest przypadkowa?*
 
 * **Konstrukcja:**
+
     * **Wiersze (Złożone):** Konkatenacja Rynku i Miesiąca (np. `PL_Styczeń` ... `RO_Czerwiec`).
     * **Kolumny:** Grupy Produktowe (S01, S02).
 
-
 * **Wnioski Biznesowe:**
+
     * **Pionowa spójność:** Jeśli w kolumnie S01 przez 6 miesięcy dominuje ten sam model, mamy silną podstawę do jego wdrożenia produkcyjnego.
 
+### Widok C: Głębokie Porównanie Modeli (Model Competition & Decomposition)
 
+Służy do oceny marginesu zwycięstwa w konkretnym kontekście rynkowym oraz zrozumienia natury błędu.
 
-### Widok C: Głębokie Porównanie Modeli (Model Competition)
-
-Służy do oceny marginesu zwycięstwa w konkretnym kontekście rynkowym.
-
-* **Pytanie:** *O ile lepszy jest zwycięzca od drugiego miejsca w konkretnej komórce (Rynek+Grupa)?*
+* **Pytanie:** *O ile lepszy jest zwycięzca od drugiego miejsca i z czego wynika jego przewaga (dokładność vs stabilność)?*
 
 * **Kontekst:** Widok dla ustalonej, pojedynczej komórki macierzy (np. tylko PL + S01).
 
 * **Konstrukcja:**
+
     * **Wiersze:** Miesiące (1...6) + Podsumowanie.
     * **Kolumny:** Wszystkie dostępne Modele.
-    * **Zawartość:** Wartość liczbowa wybranej metryki.
+    * **Zawartość:** Wartość liczbowa wybranej metryki $\mathcal{M}_{total}$.
+    * **Dodatek wizualny:** Przy każdym modelu prezentowany jest wskaźnik proporcji (np. micro-bar), pokazujący jaki procent kary wynika ze składowej dokładności ($\alpha \cdot \text{Błąd}$), a jaki ze składowej stabilności ($\beta \cdot \text{Shift}$).
 
 * **Wnioski Biznesowe:**
-    * Pozwala zauważyć, gdy "najlepszy" model wciąż ma nieakceptowalnie wysoką wartość metryki błędu.
 
-
+    * Pozwala zauważyć, gdy "najlepszy" model wygrywa wyłącznie dzięki stabilności, mimo słabej celności, co może wymusić rewizję wag.
 
 ### Widok D: Szczegółowa Ewolucja Konkurencji (Model Evolution)
 
 Służy do precyzyjnej analizy dynamiki zmian wyników wszystkich modeli w czasie dla ustalonego, konkretnego wycinka biznesowego.
 
-* **Pytanie:** *Jak zmienia się jakość poszczególnych modeli z miesiąca na miesiąc w tym konkretnym segmencie? Czy modele są blisko siebie (walka wyrównana), czy jeden dominuje przez cały czas?*
-
-* **Kontekst (Filtry):** Widok dla **jednego wybranego Rynku** (np. PL) i **jednej wybranej Grupy Produktowej** (np. S01).
+* **Pytanie:** *Jak zmienia się jakość poszczególnych modeli z miesiąca na miesiąc w tym konkretnym segmencie?*
 
 * **Konstrukcja:**
+
     * **Wiersze:** Lista dostępnych Modeli (Biznesowy, DS1, DS2, DS3, DS4).
     * **Kolumny:** Kolejne Miesiące ewaluacji (M1, M2, ..., M6).
     * **Zawartość:** Dokładna wartość liczbowa metryki.
 
+* **Wnioski Biznesowe:**
+
+    * **Analiza trendu:** Pozwala zobaczyć, czy dany model systematycznie się poprawia, czy degraduje.
+
+### Widok E: Analiza "Cost of Stability" (Analiza Kosztu Alternatywnego)
+
+Służy do oceny kosztu biznesowego wynikającego z priorytetyzacji stabilności nad dokładność.
+
+* **Pytanie:** *Ile tracimy na czystej precyzji (trafności), wybierając model stabilniejszy?*
+
+* **Konstrukcja:**
+
+    * Zestawienie dwóch rankingów dla wybranej komórki.
+    * Ranking 1: Sortowany według czystego błędu $\mathbf{E}^{(0)}$ (scenariusz $\beta=0$).
+    * Ranking 2: Sortowany według pełnej metryki $\mathcal{M}_{total}$ (z uwzględnieniem stabilności).
 
 * **Wnioski Biznesowe:**
-    * **Analiza trendu:** Pozwala zobaczyć, czy dany model systematycznie się poprawia (metryka maleje w kolejnych kolumnach), czy degraduje.
-    * **Ocena dystansu:** Widzimy czarno na białym, jak "ciasny" jest wyścig. Jeśli w M1 różnica między modelem A i B wynosi 0.01, a w M2 wynosi 50.0, to jest to kluczowa informacja o niestabilności, której nie pokaże sama informacja o zwycięzcy.
-    * **Współgranie modeli:** Umożliwia ocenę korelacji błędów – czy w trudnym miesiącu (np. M4) wszystkie modele radzą sobie gorzej ("trudny rynek"), czy tylko niektóre ("zły model").
+
+    * Jeśli model wygrywający w Rankingu 2 ma znacznie gorszą pozycję w Rankingu 1, biznes otrzymuje jasną informację o "cenie spokoju". Pozwala to na świadomą akceptację gorszej trafności w zamian za stabilniejsze prognozy.
+
+### Widok F: Symulacja "What-if" dla Parametrów Globalnych
+
+Służy do weryfikacji odporności (Robustness) podjętej decyzji o wyborze modelu.
+
+* **Pytanie:** *Czy nasz lider pozostanie liderem, jeśli nieznacznie zmienimy priorytety biznesowe?*
+
+* **Konstrukcja:**
+
+    * Interaktywny widok z suwakami dla parametrów $\alpha$ i $\beta$.
+    * Dynamiczna zmiana kolejności modeli w tabeli wyników w czasie rzeczywistym podczas poruszania suwakami.
+
+* **Wnioski Biznesowe:**
+
+    * **Decision Confidence:** Jeśli lider rankingu nie zmienia się przy wahaniach wag o $\pm 10\%$, oznacza to, że wybór jest bezpieczny i obiektywny. Szybkie zmiany na podium przy małych ruchach suwaka sugerują, że modele są porównywalne i wybór jest arbitralny.
