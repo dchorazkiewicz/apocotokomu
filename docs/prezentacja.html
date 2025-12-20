@@ -66,11 +66,11 @@
         const TARGET = 100; // Cel sprzedaży (Uproszczenie: stały cel dla demo)
 
         const MODEL_DEFS = [
-            { id: 'biz', name: 'Model Biznesowy', color: '#64748b', type: 'Ref', desc: 'Konserwatywny, płaski, rzadko trafia idealnie, ale bardzo stabilny.' },
-            { id: 'ds1', name: 'DS1: Snajper', color: '#2563eb', type: 'DS', desc: 'Wysoka trafność końcowa, ale duża zmienność (nerwowość).' },
-            { id: 'ds2', name: 'DS2: Beton', color: '#059669', type: 'DS', desc: 'Bardzo gładki przebieg, ale z systematycznym błędem (bias).' },
-            { id: 'ds3', name: 'DS3: Late Adjuster', color: '#d97706', type: 'DS', desc: 'Myli się przez większość miesiąca, koryguje ostro na koniec.' },
-            { id: 'ds4', name: 'DS4: Chaos', color: '#dc2626', type: 'DS', desc: 'Niespójny. Raz wygrywa, raz przegrywa (Lucky Shot).' }
+            { id: 'biz', name: 'Model Biznesowy', color: '#64748b', type: 'Ref', desc: 'Liniowe dociąganie do celu. Przewidywalny, z małym szumem.' },
+            { id: 'ds1', name: 'DS1: Gasnąca Sinusoida', color: '#2563eb', type: 'DS', desc: 'Oscyluje wokół celu, ale z każdym dniem coraz precyzyjniej (malejąca amplituda).' },
+            { id: 'ds2', name: 'DS2: Stabilny Bias', color: '#059669', type: 'DS', desc: 'Bardzo stabilny, gładki, ale systematycznie niedoszacowany (bezpieczny).' },
+            { id: 'ds3', name: 'DS3: Late Adjuster', color: '#d97706', type: 'DS', desc: 'Długo utrzymuje błędną prognozę, gwałtowna korekta na sam koniec.' },
+            { id: 'ds4', name: 'DS4: Wysoka Zmienność', color: '#dc2626', type: 'DS', desc: 'Średnio trafia w punkt, ale jest bardzo nerwowy (duże skoki dzień-do-dnia).' }
         ];
 
         // --- 2. DATA GENERATOR (THE ACTORS) ---
@@ -87,39 +87,60 @@
                         const daysInMonth = 30;
                         const modelsData = {};
 
+                        // Seed pseudo-losowości zależny od miesiąca/grupy, żeby wykresy nie były identyczne
+                        const seed = (monIdx + 1) * (grp === 'S01' ? 1 : 1.5);
+
                         MODEL_DEFS.forEach(model => {
                             let series = [];
                             for(let t=1; t<=daysInMonth; t++) {
                                 let val = TARGET;
                                 const progress = t / daysInMonth; // 0 to 1
 
-                                // Specyfika rynków (PL trudniejszy, RO łatwiejszy)
-                                const marketNoise = mkt === 'PL' ? 1.2 : 0.8; 
+                                // Specyfika rynków (PL trudniejszy - większy szum)
+                                const noiseFactor = mkt === 'PL' ? 1.0 : 0.7; 
+                                const randomNoise = (Math.random() - 0.5) * 2; // -1 to 1
                                 
                                 switch(model.id) {
-                                    case 'biz': // Płaski, niedoszacowany
-                                        val = TARGET * 0.9 + (Math.random() * 2 - 1);
+                                    case 'biz': // Liniowe dociąganie + mały szum
+                                        // Startujemy np. od 85 (S01) lub 115 (S02) i idziemy do 100
+                                        const startVal = grp === 'S01' ? 85 : 110;
+                                        const trend = startVal + (TARGET - startVal) * progress;
+                                        // Mały szum +/- 1.5
+                                        val = trend + (randomNoise * 1.5 * noiseFactor);
                                         break;
-                                    case 'ds1': // Snajper (nerwowy, ale trafia)
-                                        // Zbiega do celu, ale skacze
-                                        val = TARGET + (20 * (1-progress) * (Math.random() - 0.5) * 5 * marketNoise); 
-                                        // Wymuszamy trafienie blisko 100 na koniec
-                                        if(t > 28) val = TARGET + (Math.random() * 2 - 1);
+
+                                    case 'ds1': // Gasnąca Sinusoida
+                                        // Amplituda maleje z czasem: 25 -> 0
+                                        // Częstotliwość stała
+                                        const decay = Math.exp(-2.5 * progress); // Szybkie tłumienie
+                                        const amplitude = 25 * decay * (grp === 'S01' ? 1 : -1); // Odwrócenie fazy dla grup
+                                        const osc = amplitude * Math.sin(t * 0.4 + seed);
+                                        val = TARGET + osc;
                                         break;
-                                    case 'ds2': // Beton (Gładki, ale obok)
-                                        // Sinusoida wolna, brak szumu
-                                        val = TARGET + 15 * Math.sin(t/10); 
+
+                                    case 'ds2': // Stabilny Bias (Beton)
+                                        // Płasko lub delikatna fala, ale przesunięta o -8
+                                        // Bardzo mały szum własny
+                                        val = (TARGET - 8) + (Math.sin(t * 0.1) * 2);
                                         break;
-                                    case 'ds3': // Late Adjuster
-                                        // Duży błąd do 25 dnia, potem skok
-                                        if (t < 25) val = TARGET - 15 + (Math.random());
-                                        else val = TARGET + (Math.random() * 2 - 1); // Nagła korekta
+
+                                    case 'ds3': // Late Adjuster (bez zmian - bo jest spoko)
+                                        // Błąd do 26 dnia, potem korekta
+                                        if (t < 26) {
+                                            // Trzyma się np. poziomu 90 lub 110
+                                            val = (grp === 'S01' ? 88 : 112) + (randomNoise * 2); 
+                                        } else {
+                                            // Szybki powrót do celu (ale nie idealny)
+                                            val = TARGET + (randomNoise * 3);
+                                        }
                                         break;
-                                    case 'ds4': // Chaos
-                                        // Losowo dobry lub zły w zależności od miesiąca
-                                        const isLuckyMonth = (monIdx + (grp==='S01'?0:1)) % 2 === 0;
-                                        if (isLuckyMonth) val = TARGET + (Math.random() * 5 - 2.5); // Dobry miesiąc
-                                        else val = TARGET + 20 + (Math.random() * 10); // Zły miesiąc
+
+                                    case 'ds4': // Wysoka Zmienność (Nervous)
+                                        // Średnia = Target, ale amplituda skoków duża (+/- 12)
+                                        // To ukarze go na stabilności, mimo dobrej średniej
+                                        val = TARGET + (randomNoise * 12 * noiseFactor); 
+                                        // Dodatkowy "pik" raz na jakiś czas
+                                        if (t % 7 === 0) val += (randomNoise * 10);
                                         break;
                                 }
                                 series.push(val);
