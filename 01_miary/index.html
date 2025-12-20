@@ -1,0 +1,982 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../02_prezentacja_wynikow/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Miary - My Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#analiza-matematyczna-walidacji-modeli-predykcyjnych-sprzedazy-netto" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="My Docs" class="md-header__button md-logo" aria-label="My Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            My Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Miary
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="My Docs" class="md-nav__button md-logo" aria-label="My Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    My Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strona główna
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Miary
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Miary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-cel-i-definicja-problemu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Cel i Definicja Problemu
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-zaozenia-wstepne" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Założenia Wstępne
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-formalizacja-matematyczna-rozszerzanie-przestrzeni" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Formalizacja Matematyczna: Rozszerzanie Przestrzeni
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Formalizacja Matematyczna: Rozszerzanie Przestrzeni">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-bazowy-wektor-bedow-komponent-0-rzedu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1. Bazowy Wektor Błędów (Komponent 0-rzędu)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-wektory-roznicowe-komponenty-wyzszych-rzedow-shift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2. Wektory Różnicowe (Komponenty wyższych rzędów - Shift)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-konstrukcja-wektora-rozszerzonego-augmented-vector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3. Konstrukcja Wektora Rozszerzonego (Augmented Vector)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-definicja-miary-struktura-przestrzeni-hilberta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Definicja Miary (Struktura Przestrzeni Hilberta)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Definicja Miary (Struktura Przestrzeni Hilberta)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-przestrzen-wag-czasowych" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1. Przestrzeń Wag Czasowych
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-globalne-parametry-sterujace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2. Globalne Parametry Sterujące
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-definicja-metryki-finalnej-mathcalm_total" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3. Definicja Metryki Finalnej (\(\mathcal{M}_{total}\))
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-postac-jawna-szeregowa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4. Postać Jawna (Szeregowa)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-przykad-obliczeniowy-case-study" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Przykład Obliczeniowy (Case Study)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Przykład Obliczeniowy (Case Study)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#krok-1-budowa-komponentow-wektora-bad-bezwzgledny" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Krok 1: Budowa Komponentów Wektora (Błąd bezwzględny)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#krok-2-aplikacja-wag-czasowych-wewnatrz-skadowych" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Krok 2: Aplikacja Wag Czasowych (Wewnątrz składowych)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#krok-3-wyliczenie-miary-koncowej-z-parametrami-globalnymi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Krok 3: Wyliczenie Miary Końcowej z Parametrami Globalnymi
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_prezentacja_wynikow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prezentacja wyników
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aplikacja.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Miary App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prezentacja.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prezentacja App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-cel-i-definicja-problemu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Cel i Definicja Problemu
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-zaozenia-wstepne" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Założenia Wstępne
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-formalizacja-matematyczna-rozszerzanie-przestrzeni" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Formalizacja Matematyczna: Rozszerzanie Przestrzeni
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Formalizacja Matematyczna: Rozszerzanie Przestrzeni">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-bazowy-wektor-bedow-komponent-0-rzedu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1. Bazowy Wektor Błędów (Komponent 0-rzędu)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-wektory-roznicowe-komponenty-wyzszych-rzedow-shift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2. Wektory Różnicowe (Komponenty wyższych rzędów - Shift)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-konstrukcja-wektora-rozszerzonego-augmented-vector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3. Konstrukcja Wektora Rozszerzonego (Augmented Vector)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-definicja-miary-struktura-przestrzeni-hilberta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Definicja Miary (Struktura Przestrzeni Hilberta)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Definicja Miary (Struktura Przestrzeni Hilberta)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-przestrzen-wag-czasowych" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1. Przestrzeń Wag Czasowych
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-globalne-parametry-sterujace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2. Globalne Parametry Sterujące
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-definicja-metryki-finalnej-mathcalm_total" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3. Definicja Metryki Finalnej (\(\mathcal{M}_{total}\))
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-postac-jawna-szeregowa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4. Postać Jawna (Szeregowa)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-przykad-obliczeniowy-case-study" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Przykład Obliczeniowy (Case Study)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Przykład Obliczeniowy (Case Study)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#krok-1-budowa-komponentow-wektora-bad-bezwzgledny" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Krok 1: Budowa Komponentów Wektora (Błąd bezwzględny)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#krok-2-aplikacja-wag-czasowych-wewnatrz-skadowych" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Krok 2: Aplikacja Wag Czasowych (Wewnątrz składowych)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#krok-3-wyliczenie-miary-koncowej-z-parametrami-globalnymi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Krok 3: Wyliczenie Miary Końcowej z Parametrami Globalnymi
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="analiza-matematyczna-walidacji-modeli-predykcyjnych-sprzedazy-netto">Analiza Matematyczna Walidacji Modeli Predykcyjnych Sprzedaży Netto</h1>
+<h2 id="1-cel-i-definicja-problemu">1. Cel i Definicja Problemu</h2>
+<p>Celem dokumentu jest zdefiniowanie matematycznych ram walidacji modeli predykcyjnych prognozujących sprzedaż netto.</p>
+<p>W niniejszym opracowaniu przyjmujemy zintegrowane podejście do oceny jakości modelu. Definiujemy "błąd modelu" jako pojęcie wielowymiarowe, na które składają się jednocześnie:</p>
+<ol>
+<li>Odchylenie od wartości rzeczywistej (dokładność).</li>
+<li>Odchylenie od własnych wcześniejszych predykcji (stabilność).</li>
+</ol>
+<p>Model niestabilny jest matematycznie traktowany jako model obarczony błędem na wymiarach różnicowych. Realizujemy to poprzez konstrukcję <strong>Wektora Rozszerzonego (Augmented Vector)</strong>, który agreguje wszystkie typy błędów w jeden obiekt podlegający ocenie.</p>
+<h2 id="2-zaozenia-wstepne">2. Założenia Wstępne</h2>
+<ul>
+<li><strong>Poprawność Metodologiczna:</strong> Zakładamy, że dostarczone szeregi czasowe są poprawne technicznie (poprawnie wytrenowane/wygenerowane).</li>
+<li><strong>Porównywalność:</strong> Wszystkie modele (Data Science oraz Biznesowe) operują na tych samych danych wejściowych i celują w tę samą definicję sprzedaży netto.</li>
+<li><strong>Jednostka Czasu:</strong> Analiza dotyczy predykcji dziennych w obrębie jednego miesiąca (<span class="arithmatex">\(N\)</span> dni).</li>
+</ul>
+<h2 id="3-formalizacja-matematyczna-rozszerzanie-przestrzeni">3. Formalizacja Matematyczna: Rozszerzanie Przestrzeni</h2>
+<p>Niech <span class="arithmatex">\(y_{real} \in \mathbb{R}\)</span> oznacza rzeczywistą sprzedaż na koniec miesiąca.
+Niech <span class="arithmatex">\(\mathbf{P} = [\hat{y}_1, \dots, \hat{y}_N]\)</span> oznacza wektor predykcji modelu w kolejnych dniach miesiąca.</p>
+<h3 id="31-bazowy-wektor-bedow-komponent-0-rzedu">3.1. Bazowy Wektor Błędów (Komponent 0-rzędu)</h3>
+<p>Podstawowym elementem oceny jest wektor błędów względem wartości rzeczywistej.</p>
+<div class="arithmatex">\[
+\mathbf{E}^{(0)} = [e_1, e_2, \dots, e_N], \quad \text{gdzie } e_t = \mathcal{L}(\hat{y}_t, y_{real})
+\]</div>
+<p>Funkcja <span class="arithmatex">\(\mathcal{L}\)</span> określa miarę odległości (np. błąd bezwzględny, procentowy).</p>
+<h3 id="32-wektory-roznicowe-komponenty-wyzszych-rzedow-shift">3.2. Wektory Różnicowe (Komponenty wyższych rzędów - Shift)</h3>
+<p>Uzupełniamy opis modelu o informację dotyczącą jego wewnętrznej spójności w czasie. Definiujemy komponenty dla każdego przesunięcia (shift) <span class="arithmatex">\(k\)</span> od <span class="arithmatex">\(1\)</span> do <span class="arithmatex">\(S\)</span>.</p>
+<p>Dla przesunięcia <span class="arithmatex">\(k\)</span>:</p>
+<div class="arithmatex">\[
+\mathbf{E}^{(k)} = [\delta^{(k)}_{k+1}, \dots, \delta^{(k)}_N]
+\]</div>
+<p>Gdzie element wektora to różnica między predykcjami oddalonymi o <span class="arithmatex">\(k\)</span> dni:</p>
+<div class="arithmatex">\[
+\delta^{(k)}_t = \mathcal{L}(\hat{y}_t, \hat{y}_{t-k})
+\]</div>
+<p>Wektory <span class="arithmatex">\(\mathbf{E}^{(k)}\)</span> mają wymiar <span class="arithmatex">\(N-k\)</span>.</p>
+<h3 id="33-konstrukcja-wektora-rozszerzonego-augmented-vector">3.3. Konstrukcja Wektora Rozszerzonego (Augmented Vector)</h3>
+<p>Definiujemy jeden, spójny <strong>Wektor Rozszerzony <span class="arithmatex">\(\mathbb{E}_{aug}\)</span></strong>, będący konkatenacją błędu bazowego i błędów różnicowych.</p>
+<p>Dla zadanego maksymalnego rzędu przesunięcia <span class="arithmatex">\(S\)</span>:</p>
+<div class="arithmatex">\[
+\mathbb{E}_{aug} = \left[ \mathbf{E}^{(0)}, \mathbf{E}^{(1)}, \dots, \mathbf{E}^{(S)} \right]
+\]</div>
+<p>Każdy element tego wektora reprezentuje składową całkowitego błędu modelu.</p>
+<h2 id="4-definicja-miary-struktura-przestrzeni-hilberta">4. Definicja Miary (Struktura Przestrzeni Hilberta)</h2>
+<p>Ocena jakości modelu sprowadza się do rzutowania wielowymiarowej przestrzeni błędów na pojedynczą wartość skalarną (score). Aby zachować rygor matematyczny i elastyczność biznesową, definicję metryki opieramy na ważonym iloczynie skalarnym, rozszerzonym o globalne parametry sterujące.</p>
+<h3 id="41-przestrzen-wag-czasowych">4.1. Przestrzeń Wag Czasowych</h3>
+<p>Analogicznie do definicji wektorów błędów <span class="arithmatex">\(\mathbf{E}^{(k)}\)</span>, definiujemy odpowiadające im wektory wag czasu, które parametryzują funkcję kosztu w zależności od dnia miesiąca.</p>
+<p>Dla komponentu bazowego (<span class="arithmatex">\(k=0\)</span>) oraz każdego rzędu przesunięcia (<span class="arithmatex">\(k \in \{1, \dots, S\}\)</span>) przyjmujemy wektory wag:</p>
+<div class="arithmatex">\[
+\mathbf{W}^{(0)} \in \mathbb{R}^N, \quad \mathbf{W}^{(k)} \in \mathbb{R}^{N-k}
+\]</div>
+<p>Elementy tych wektorów, oznaczone odpowiednio <span class="arithmatex">\(w_t^{(0)}\)</span> oraz <span class="arithmatex">\(w_j^{(k)}\)</span>, są wyznaczane przez przyjęte funkcje czasu (np. rosnąca penalizacja w miarę zbliżania się do końca miesiąca).</p>
+<h3 id="42-globalne-parametry-sterujace">4.2. Globalne Parametry Sterujące</h3>
+<p>Aby umożliwić biznesowe sterowanie priorytetami (wybór między modelem "dokładnym" a "stabilnym"), wprowadzamy dwa globalne skalary (mnożniki):</p>
+<ul>
+<li><span class="arithmatex">\(\alpha\)</span> (alpha) – <strong>Waga Dokładności (Accuracy Weight):</strong> Globalny mnożnik dla błędów względem wartości rzeczywistej.</li>
+<li><span class="arithmatex">\(\beta\)</span> (beta) – <strong>Waga Stabilności (Stability Weight):</strong> Globalny mnożnik dla błędów różnicowych (zmienności predykcji).</li>
+</ul>
+<h3 id="43-definicja-metryki-finalnej-mathcalm_total">4.3. Definicja Metryki Finalnej (<span class="arithmatex">\(\mathcal{M}_{total}\)</span>)</h3>
+<p>Całkowitą miarę błędu modelu <span class="arithmatex">\(\mathcal{M}_{total}\)</span> definiujemy jako sumę ważonych iloczynów skalarnych, przemnożoną przez odpowiednie parametry globalne.</p>
+<p>Niech <span class="arithmatex">\(\langle \mathbf{A}, \mathbf{B} \rangle\)</span> oznacza standardowy iloczyn skalarny wektorów w przestrzeni euklidesowej: <span class="arithmatex">\(\langle \mathbf{A}, \mathbf{B} \rangle = \sum a_i b_i\)</span>.</p>
+<p>Wzór ogólny przyjmuje postać:</p>
+<div class="arithmatex">\[
+\mathcal{M}_{total} = \alpha \cdot \underbrace{ \langle \mathbf{W}^{(0)}, \mathbf{E}^{(0)} \rangle }_{\text{Składowa Dokładności}} + \beta \cdot \sum_{k=1}^{S} \underbrace{ \langle \mathbf{W}^{(k)}, \mathbf{E}^{(k)} \rangle }_{\text{Składowa Stabilności rzędu } k}
+\]</div>
+<h3 id="44-postac-jawna-szeregowa">4.4. Postać Jawna (Szeregowa)</h3>
+<p>Rozwijając powyższy zapis do postaci sumy po elementach, otrzymujemy jawną formułę obliczeniową zaimplementowaną w systemie:</p>
+<div class="arithmatex">\[
+\mathcal{M}_{total} = \alpha \sum_{t=1}^{N} w_t^{(0)} e_t + \beta \sum_{k=1}^{S} \left( \sum_{j=1}^{N-k} w_j^{(k)} \delta_j^{(k)} \right)
+\]</div>
+<p>Gdzie:</p>
+<ul>
+<li><strong>Pierwszy człon</strong> to ważona suma błędów predykcji, skalowana przez parametr <span class="arithmatex">\(\alpha\)</span>.</li>
+<li><strong>Drugi człon</strong> to suma kar za niestabilność (dla wszystkich przesunięć <span class="arithmatex">\(k\)</span>), skalowana przez parametr <span class="arithmatex">\(\beta\)</span>.</li>
+</ul>
+<p>Tak zdefiniowana metryka <span class="arithmatex">\(\mathcal{M}_{total}\)</span> jest wielkością, którą należy minimalizować.</p>
+<hr />
+<h2 id="5-przykad-obliczeniowy-case-study">5. Przykład Obliczeniowy (Case Study)</h2>
+<p>Poniższy przykład obrazuje mechanikę obliczania metryki dla uproszczonego, <strong>5-elementowego szeregu</strong> z uwzględnieniem parametrów globalnych.</p>
+<p><strong>Dane wejściowe:</strong></p>
+<ul>
+<li>Rzeczywista sprzedaż (<span class="arithmatex">\(y_{real}\)</span>): <strong>100</strong></li>
+<li>Predykcje modelu (<span class="arithmatex">\(\mathbf{P}\)</span>): <strong>[90, 95, 110, 102, 100]</strong></li>
+<li><strong>Konfiguracja Globalna:</strong><ul>
+<li>Waga Dokładności (<span class="arithmatex">\(\alpha\)</span>): <strong>1.0</strong></li>
+<li>Waga Stabilności (<span class="arithmatex">\(\beta\)</span>): <strong>2.0</strong> (Priorytetyzujemy stabilność nad precyzję).</li>
+</ul>
+</li>
+</ul>
+<h3 id="krok-1-budowa-komponentow-wektora-bad-bezwzgledny">Krok 1: Budowa Komponentów Wektora (Błąd bezwzględny)</h3>
+<ol>
+<li>
+<p><strong>Komponent Bazowy (Błąd vs Real):</strong>
+    <span class="arithmatex">\(\mathbf{E}^{(0)} = [10, 5, 10, 2, 0]\)</span></p>
+</li>
+<li>
+<p><strong>Komponent Shift=1 (Zmienność dzień-do-dnia):</strong>
+    <span class="arithmatex">\(\mathbf{E}^{(1)} = [5, 15, 8, 2]\)</span></p>
+</li>
+<li>
+<p><strong>Komponent Shift=2 (Zmienność co 2 dni):</strong>
+    <span class="arithmatex">\(\mathbf{E}^{(2)} = [20, 7, 10]\)</span></p>
+</li>
+</ol>
+<h3 id="krok-2-aplikacja-wag-czasowych-wewnatrz-skadowych">Krok 2: Aplikacja Wag Czasowych (Wewnątrz składowych)</h3>
+<p>Przyjmujemy wagi rosnące liniowo dla przykładu.
+* <span class="arithmatex">\(\mathbf{W}^{(0)} = [1.0, 2.0, 3.0, 4.0, 5.0]\)</span>
+* <span class="arithmatex">\(\mathbf{W}^{(1)} = [0.2, 0.4, 0.6, 0.8]\)</span>
+* <span class="arithmatex">\(\mathbf{W}^{(2)} = [0.3, 0.6, 0.9]\)</span></p>
+<p>Obliczamy "surowe" iloczyny skalarne (przed aplikacją <span class="arithmatex">\(\alpha\)</span> i <span class="arithmatex">\(\beta\)</span>):</p>
+<ol>
+<li>
+<p><strong>Surowa Dokładność:</strong>
+    <span class="arithmatex">\((10\cdot1) + (5\cdot2) + (10\cdot3) + (2\cdot4) + (0\cdot5) = 10 + 10 + 30 + 8 + 0 = \mathbf{58.0}\)</span></p>
+</li>
+<li>
+<p><strong>Surowa Stabilność (Shift 1):</strong>
+    <span class="arithmatex">\((5\cdot0.2) + (15\cdot0.4) + (8\cdot0.6) + (2\cdot0.8) = 1.0 + 6.0 + 4.8 + 1.6 = \mathbf{13.4}\)</span></p>
+</li>
+<li>
+<p><strong>Surowa Stabilność (Shift 2):</strong>
+    <span class="arithmatex">\((20\cdot0.3) + (7\cdot0.6) + (10\cdot0.9) = 6.0 + 4.2 + 9.0 = \mathbf{19.2}\)</span></p>
+</li>
+</ol>
+<h3 id="krok-3-wyliczenie-miary-koncowej-z-parametrami-globalnymi">Krok 3: Wyliczenie Miary Końcowej z Parametrami Globalnymi</h3>
+<p>Aplikujemy parametry <span class="arithmatex">\(\alpha = 1.0\)</span> oraz <span class="arithmatex">\(\beta = 2.0\)</span> do zagregowanych wartości.</p>
+<div class="arithmatex">\[
+Metric = \alpha \cdot (\text{Surowa Dokładność}) + \beta \cdot (\text{Surowa Stabilność Shift 1} + \text{Surowa Stabilność Shift 2})
+\]</div>
+<p>Podstawiając liczby:</p>
+<div class="arithmatex">\[
+Metric = 1.0 \cdot 58.0 + 2.0 \cdot (13.4 + 19.2)
+\]</div>
+<div class="arithmatex">\[
+Metric = 58.0 + 2.0 \cdot (32.6)
+\]</div>
+<div class="arithmatex">\[
+Metric = 58.0 + 65.2 = \mathbf{123.2}
+\]</div>
+<p>W tym scenariuszu wysoka wartość parametru <span class="arithmatex">\(\beta\)</span> (2.0) sprawiła, że błędy wynikające z nerwowości modelu (skoki predykcji) mają decydujący wpływ na ocenę końcową, przeważając nad prostym błędem trafności.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1057 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../01_miary/">
+      
+      
+        <link rel="next" href="../aplikacja.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Prezentacja wyników - My Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#specyfikacja-funkcjonalna-arena-modeli-i-prezentacja-wynikow" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="My Docs" class="md-header__button md-logo" aria-label="My Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            My Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Prezentacja wyników
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="My Docs" class="md-nav__button md-logo" aria-label="My Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    My Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strona główna
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_miary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Miary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prezentacja wyników
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prezentacja wyników
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-cel-dokumentu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Cel Dokumentu
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-fundamenty-i-zaozenia-projektowe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Fundamenty i Założenia Projektowe
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Fundamenty i Założenia Projektowe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-metodologia-oceny-zgodnosc-z-frameworkiem-matematycznym" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1. Metodologia Oceny (Zgodność z Frameworkiem Matematycznym)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-przestrzen-modeli-i-kontekst-zasada-niezaleznosci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2. Przestrzeń Modeli i Kontekst (Zasada Niezależności)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-horyzont-czasowy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3. Horyzont Czasowy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-logika-analityczna" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Logika Analityczna
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Logika Analityczna">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-zasada-jednej-metryki-the-single-metric-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1. Zasada Jednej Metryki (The Single Metric Principle)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-zasada-lokalnej-optymalizacji-granularnosc-decyzji" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2. Zasada Lokalnej Optymalizacji (Granularność Decyzji)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-metody-agregacji" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3. Metody Agregacji
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-scenariusze-wizualizacji-widoki-decyzyjne" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Scenariusze Wizualizacji (Widoki Decyzyjne)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Scenariusze Wizualizacji (Widoki Decyzyjne)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#widok-a-strategiczna-mapa-ciepa-heatmapa-rynkowa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Widok A: Strategiczna Mapa Ciepła (Heatmapa Rynkowa)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#widok-b-analiza-konsystencji-w-czasie-time-consistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Widok B: Analiza Konsystencji w Czasie (Time Consistency)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#widok-c-gebokie-porownanie-modeli-model-competition-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Widok C: Głębokie Porównanie Modeli (Model Competition &amp; Decomposition)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#widok-d-szczegoowa-ewolucja-konkurencji-model-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Widok D: Szczegółowa Ewolucja Konkurencji (Model Evolution)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#widok-e-analiza-cost-of-stability-analiza-kosztu-alternatywnego" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Widok E: Analiza "Cost of Stability" (Analiza Kosztu Alternatywnego)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#widok-f-symulacja-what-if-dla-parametrow-globalnych" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Widok F: Symulacja "What-if" dla Parametrów Globalnych
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aplikacja.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Miary App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prezentacja.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prezentacja App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-cel-dokumentu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Cel Dokumentu
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-fundamenty-i-zaozenia-projektowe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Fundamenty i Założenia Projektowe
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Fundamenty i Założenia Projektowe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-metodologia-oceny-zgodnosc-z-frameworkiem-matematycznym" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1. Metodologia Oceny (Zgodność z Frameworkiem Matematycznym)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-przestrzen-modeli-i-kontekst-zasada-niezaleznosci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2. Przestrzeń Modeli i Kontekst (Zasada Niezależności)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-horyzont-czasowy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3. Horyzont Czasowy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-logika-analityczna" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Logika Analityczna
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Logika Analityczna">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-zasada-jednej-metryki-the-single-metric-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1. Zasada Jednej Metryki (The Single Metric Principle)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-zasada-lokalnej-optymalizacji-granularnosc-decyzji" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2. Zasada Lokalnej Optymalizacji (Granularność Decyzji)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-metody-agregacji" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3. Metody Agregacji
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-scenariusze-wizualizacji-widoki-decyzyjne" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Scenariusze Wizualizacji (Widoki Decyzyjne)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Scenariusze Wizualizacji (Widoki Decyzyjne)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#widok-a-strategiczna-mapa-ciepa-heatmapa-rynkowa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Widok A: Strategiczna Mapa Ciepła (Heatmapa Rynkowa)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#widok-b-analiza-konsystencji-w-czasie-time-consistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Widok B: Analiza Konsystencji w Czasie (Time Consistency)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#widok-c-gebokie-porownanie-modeli-model-competition-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Widok C: Głębokie Porównanie Modeli (Model Competition &amp; Decomposition)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#widok-d-szczegoowa-ewolucja-konkurencji-model-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Widok D: Szczegółowa Ewolucja Konkurencji (Model Evolution)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#widok-e-analiza-cost-of-stability-analiza-kosztu-alternatywnego" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Widok E: Analiza "Cost of Stability" (Analiza Kosztu Alternatywnego)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#widok-f-symulacja-what-if-dla-parametrow-globalnych" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Widok F: Symulacja "What-if" dla Parametrów Globalnych
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="specyfikacja-funkcjonalna-arena-modeli-i-prezentacja-wynikow">Specyfikacja Funkcjonalna: Arena Modeli i Prezentacja Wyników</h1>
+<h2 id="1-cel-dokumentu">1. Cel Dokumentu</h2>
+<p>Celem niniejszego opracowania jest zdefiniowanie logiki oraz struktury wizualnej systemu typu <strong>"Arena Modeli"</strong>. System służy do walidacji i selekcji najlepszych instancji modeli predykcyjnych sprzedaży netto.</p>
+<p>Kluczowym zadaniem analitycznym jest precyzyjne "dofitowanie" rozwiązań: nie szukamy jednego uniwersalnego algorytmu dla całej organizacji. Dążymy do wyłonienia najlepszego modelu niezależnie dla każdej kombinacji Rynku i Grupy Produktowej lub zidentyfikowania obszarów, gdzie żaden z obecnych modeli nie spełnia wymogów jakościowych.</p>
+<h2 id="2-fundamenty-i-zaozenia-projektowe">2. Fundamenty i Założenia Projektowe</h2>
+<h3 id="21-metodologia-oceny-zgodnosc-z-frameworkiem-matematycznym">2.1. Metodologia Oceny (Zgodność z Frameworkiem Matematycznym)</h3>
+<p>System opiera się na wielowymiarowej definicji błędu ("Wektor Rozszerzony"), zgodnie z przyjętą dokumentacją analityczną.</p>
+<ul>
+<li><strong>Wielowymiarowość:</strong> Ocena uwzględnia jednocześnie <strong>Dokładność</strong> (odchylenie od celu) oraz <strong>Stabilność</strong> (zmienność predykcji w czasie).</li>
+<li><strong>Sterowanie Biznesowe:</strong> Wynik końcowy zależy od konfiguracji parametrów globalnych:<ul>
+<li><span class="arithmatex">\(\alpha\)</span> (Waga Dokładności),</li>
+<li><span class="arithmatex">\(\beta\)</span> (Waga Stabilności),</li>
+<li>Funkcja Wagi Czasu (np. liniowa, wykładnicza).</li>
+</ul>
+</li>
+</ul>
+<h3 id="22-przestrzen-modeli-i-kontekst-zasada-niezaleznosci">2.2. Przestrzeń Modeli i Kontekst (Zasada Niezależności)</h3>
+<p>Przyjmujemy następującą strukturę (bazę myślową) dla projektowanych widoków:</p>
+<ul>
+<li><strong>Instancja Modelu:</strong> Model jest ściśle związany z kontekstem. Algorytm X wytrenowany dla Grupy S01 jest matematycznie i biznesowo innym bytem niż ten sam Algorytm X dla Grupy S02.</li>
+<li><strong>Heterogeniczność Danych:</strong> Zakładamy, że Grupy Produktowe (nawet w obrębie tego samego Rynku) mają fundamentalnie inną charakterystykę. Oczekujemy, że mogą wymagać zupełnie innych modeli do poprawnego opisu.</li>
+<li>
+<p><strong>Struktura Rynku:</strong> Analiza obejmuje macierz <strong>2x2</strong>:</p>
+</li>
+<li>
+<p><strong>Rynki:</strong> PL (Polska), RO (Rumunia).</p>
+</li>
+<li>
+<p><strong>Grupy Produktowe:</strong> S01, S02.</p>
+</li>
+<li>
+<p><strong>Typy Algorytmów:</strong> Porównujemy 5 typów podejść (1 Model Biznesowy/Referencyjny + 4 Modele Data Science). Łącznie daje to 10 niezależnych instancji podlegających ocenie (dla przyjętej bazy myślowej).</p>
+</li>
+</ul>
+<h3 id="23-horyzont-czasowy">2.3. Horyzont Czasowy</h3>
+<ul>
+<li>Ewaluacja obejmuje okres <strong>6 miesięcy</strong>.</li>
+<li>Analiza może być prowadzona na poziomie pojedynczego miesiąca lub agregowana dla całego okresu.</li>
+</ul>
+<p><em>&gt; </em><em>Nota:</em><em> Powyższe liczby (5 typów modeli, 2 rynki, 6 miesięcy) służą do ustalenia uwagi projektowej. System produkcyjny musi być skalowalny i obsługiwać dynamiczną liczbę rynków, grup oraz modeli.</em></p>
+<hr />
+<h2 id="3-logika-analityczna">3. Logika Analityczna</h2>
+<h3 id="31-zasada-jednej-metryki-the-single-metric-principle">3.1. Zasada Jednej Metryki (The Single Metric Principle)</h3>
+<p>Fundamentalnym założeniem systemu jest rozłączność definicji sukcesu.</p>
+<ul>
+<li><strong>Wybór, nie porównanie:</strong> Użytkownik najpierw konfiguruje metrykę (dobiera wagi <span class="arithmatex">\(\alpha\)</span> i <span class="arithmatex">\(\beta\)</span>), definiując cel biznesowy. Dopiero po ustaleniu "zasad gry" przystępujemy do oceny zawodników na arenie.</li>
+<li><strong>Zakaz krzyżowania metryk:</strong> Nigdy nie porównujemy wartości Metryki A z wartością Metryki B. Porównujemy wyłącznie różne modele w świetle tej samej, ustalonej metryki.</li>
+</ul>
+<h3 id="32-zasada-lokalnej-optymalizacji-granularnosc-decyzji">3.2. Zasada Lokalnej Optymalizacji (Granularność Decyzji)</h3>
+<p>System nie dąży do generalizacji.</p>
+<ul>
+<li><strong>Brak przymusu spójności algorytmicznej:</strong> Fakt, że na Rynku PL dla grupy S01 wygrywa "Model Biznesowy", w żaden sposób nie determinuje wyboru dla grupy S02. Tam może wygrać "Model DS4". Jest to sytuacja pożądana i oczekiwana.</li>
+<li><strong>Cel:</strong> Wybór najlepszej instancji dla konkretnej komórki macierzy (Rynek x Grupa) lub diagnoza, że dla danej komórki wszystkie dostępne modele wymagają poprawy (usprawnienia).</li>
+</ul>
+<h3 id="33-metody-agregacji">3.3. Metody Agregacji</h3>
+<p>Aby ocenić jakość modelu w dłuższym horyzoncie, system umożliwia agregację wyników miesięcznych:</p>
+<ul>
+<li><strong>Średnia / Mediana:</strong> Do oceny stabilnej wydajności w czasie.</li>
+<li><strong>Suma:</strong> Do oceny całkowitego kosztu błędu.</li>
+</ul>
+<hr />
+<h2 id="4-scenariusze-wizualizacji-widoki-decyzyjne">4. Scenariusze Wizualizacji (Widoki Decyzyjne)</h2>
+<p>System oferuje główne perspektywy (Views), wspierające proces decyzyjny na "Arenie Modeli".</p>
+<h3 id="widok-a-strategiczna-mapa-ciepa-heatmapa-rynkowa">Widok A: Strategiczna Mapa Ciepła (Heatmapa Rynkowa)</h3>
+<p>Służy do szybkiej identyfikacji "lokalnych mistrzów" w każdym segmencie.</p>
+<ul>
+<li>
+<p><strong>Pytanie:</strong> <em>Jaki model najlepiej radzi sobie z konkretną specyfiką danej grupy produktowej na danym rynku?</em></p>
+</li>
+<li>
+<p><strong>Konstrukcja:</strong></p>
+<ul>
+<li><strong>Wiersze:</strong> Rynki (PL, RO).</li>
+<li><strong>Kolumny:</strong> Grupy Produktowe (S01, S02).</li>
+<li><strong>Zawartość komórki:</strong> Nazwa zwycięskiego modelu (model z najniższą wartością metryki) lub wartość metryki zakodowana kolorem.</li>
+</ul>
+</li>
+<li>
+<p><strong>Wnioski Biznesowe:</strong></p>
+<ul>
+<li>Mozaika kolorów (różni zwycięzcy w różnych komórkach) jest sygnałem pozytywnym – świadczy o dobrej specjalizacji modeli.</li>
+</ul>
+</li>
+</ul>
+<h3 id="widok-b-analiza-konsystencji-w-czasie-time-consistency">Widok B: Analiza Konsystencji w Czasie (Time Consistency)</h3>
+<p>Służy do weryfikacji, czy zwycięstwo modelu w danej komórce jest trwałe.</p>
+<ul>
+<li>
+<p><strong>Pytanie:</strong> <em>Czy wybrany dla danej grupy model wygrywa systematycznie, czy jego skuteczność jest przypadkowa?</em></p>
+</li>
+<li>
+<p><strong>Konstrukcja:</strong></p>
+<ul>
+<li><strong>Wiersze (Złożone):</strong> Konkatenacja Rynku i Miesiąca (np. <code>PL_Styczeń</code> ... <code>PL_Czerwiec</code>).</li>
+<li><strong>Kolumny:</strong> Grupy Produktowe (S01, S02).</li>
+<li><strong>Parametr</strong>: Zmieniamy rynki (np. widok dla PL, potem dla RO).</li>
+</ul>
+</li>
+<li>
+<p><strong>Wnioski Biznesowe:</strong></p>
+<ul>
+<li><strong>Pionowa spójność:</strong> Jeśli w kolumnie S01 przez 6 miesięcy dominuje ten sam model, mamy silną podstawę do jego wdrożenia produkcyjnego.</li>
+</ul>
+</li>
+</ul>
+<h3 id="widok-c-gebokie-porownanie-modeli-model-competition-decomposition">Widok C: Głębokie Porównanie Modeli (Model Competition &amp; Decomposition)</h3>
+<p>Służy do oceny marginesu zwycięstwa w konkretnym kontekście rynkowym oraz zrozumienia natury błędu.</p>
+<ul>
+<li>
+<p><strong>Pytanie:</strong> <em>O ile lepszy jest zwycięzca od drugiego miejsca i z czego wynika jego przewaga (dokładność vs stabilność)?</em></p>
+</li>
+<li>
+<p><strong>Kontekst:</strong> Widok dla ustalonej, pojedynczej komórki macierzy (np. tylko PL + S01).</p>
+</li>
+<li>
+<p><strong>Konstrukcja:</strong></p>
+<ul>
+<li><strong>Wiersze:</strong> Miesiące (1...6) + Podsumowanie.</li>
+<li><strong>Kolumny:</strong> Wszystkie dostępne Modele.</li>
+<li><strong>Zawartość:</strong> Wartość liczbowa wybranej metryki <span class="arithmatex">\(\mathcal{M}_{total}\)</span>.</li>
+<li><strong>Dodatek wizualny:</strong> Przy każdym modelu prezentowany jest wskaźnik proporcji (np. micro-bar), pokazujący jaki procent kary wynika ze składowej dokładności (<span class="arithmatex">\(\alpha \cdot \text{Błąd}\)</span>), a jaki ze składowej stabilności (<span class="arithmatex">\(\beta \cdot \text{Shift}\)</span>).</li>
+</ul>
+</li>
+<li>
+<p><strong>Wnioski Biznesowe:</strong></p>
+<ul>
+<li>Pozwala zauważyć, gdy "najlepszy" model wygrywa wyłącznie dzięki stabilności, mimo słabej celności, co może wymusić rewizję wag.</li>
+</ul>
+</li>
+</ul>
+<h3 id="widok-d-szczegoowa-ewolucja-konkurencji-model-evolution">Widok D: Szczegółowa Ewolucja Konkurencji (Model Evolution)</h3>
+<p>Służy do precyzyjnej analizy dynamiki zmian wyników wszystkich modeli w czasie dla ustalonego, konkretnego wycinka biznesowego.</p>
+<ul>
+<li>
+<p><strong>Pytanie:</strong> <em>Jak zmienia się jakość poszczególnych modeli z miesiąca na miesiąc w tym konkretnym segmencie?</em></p>
+</li>
+<li>
+<p><strong>Konstrukcja:</strong></p>
+<ul>
+<li><strong>Wiersze:</strong> Lista dostępnych Modeli (Biznesowy, DS1, DS2, DS3, DS4).</li>
+<li><strong>Kolumny:</strong> Kolejne Miesiące ewaluacji (M1, M2, ..., M6).</li>
+<li><strong>Zawartość:</strong> Dokładna wartość liczbowa metryki.</li>
+</ul>
+</li>
+<li>
+<p><strong>Wnioski Biznesowe:</strong></p>
+<ul>
+<li><strong>Analiza trendu:</strong> Pozwala zobaczyć, czy dany model systematycznie się poprawia, czy degraduje.</li>
+</ul>
+</li>
+</ul>
+<h3 id="widok-e-analiza-cost-of-stability-analiza-kosztu-alternatywnego">Widok E: Analiza "Cost of Stability" (Analiza Kosztu Alternatywnego)</h3>
+<p>Służy do oceny kosztu biznesowego wynikającego z priorytetyzacji stabilności nad dokładność.</p>
+<ul>
+<li>
+<p><strong>Pytanie:</strong> <em>Ile tracimy na czystej precyzji (trafności), wybierając model stabilniejszy?</em></p>
+</li>
+<li>
+<p><strong>Konstrukcja:</strong></p>
+<ul>
+<li>Zestawienie dwóch rankingów dla wybranej komórki.</li>
+<li>Ranking 1: Sortowany według czystego błędu <span class="arithmatex">\(\mathbf{E}^{(0)}\)</span> (scenariusz <span class="arithmatex">\(\beta=0\)</span>).</li>
+<li>Ranking 2: Sortowany według pełnej metryki <span class="arithmatex">\(\mathcal{M}_{total}\)</span> (z uwzględnieniem stabilności).</li>
+</ul>
+</li>
+<li>
+<p><strong>Wnioski Biznesowe:</strong></p>
+<ul>
+<li>Jeśli model wygrywający w Rankingu 2 ma znacznie gorszą pozycję w Rankingu 1, biznes otrzymuje jasną informację o "cenie spokoju". Pozwala to na świadomą akceptację gorszej trafności w zamian za stabilniejsze prognozy.</li>
+</ul>
+</li>
+</ul>
+<h3 id="widok-f-symulacja-what-if-dla-parametrow-globalnych">Widok F: Symulacja "What-if" dla Parametrów Globalnych</h3>
+<p>Służy do weryfikacji odporności (Robustness) podjętej decyzji o wyborze modelu.</p>
+<ul>
+<li>
+<p><strong>Pytanie:</strong> <em>Czy nasz lider pozostanie liderem, jeśli nieznacznie zmienimy priorytety biznesowe?</em></p>
+</li>
+<li>
+<p><strong>Konstrukcja:</strong></p>
+<ul>
+<li>Interaktywny widok z suwakami dla parametrów <span class="arithmatex">\(\alpha\)</span> i <span class="arithmatex">\(\beta\)</span>.</li>
+<li>Dynamiczna zmiana kolejności modeli w tabeli wyników w czasie rzeczywistym podczas poruszania suwakami.</li>
+</ul>
+</li>
+<li>
+<p><strong>Wnioski Biznesowe:</strong></p>
+<ul>
+<li><strong>Decision Confidence:</strong> Jeśli lider rankingu nie zmienia się przy wahaniach wag o <span class="arithmatex">\(\pm 10\%\)</span>, oznacza to, że wybór jest bezpieczny i obiektywny. Szybkie zmiany na podium przy małych ruchach suwaka sugerują, że modele są porównywalne i wybór jest arbitralny.</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
